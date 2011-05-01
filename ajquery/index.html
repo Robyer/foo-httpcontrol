@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>foobar2000</title>
+		<script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-1.8.10.custom.min.js"></script>
+	        <script type="text/javascript" src="js/ajquery.js"></script>
+		<link type="text/css" href="css/smoothness/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
+		<link rel="shortcut Icon" href="/ajquery/img/favicon.ico" type="image/x-icon" />
+		<style type="text/css">
+			body{ font-size: 0.5em; margin: 10px; background-color: #ffffff; max-width: 600px;}
+			ul#buttons {margin: 0; padding: 0;}
+			ul#buttons li {margin: 3px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
+			ul#buttons span.ui-icon {float: left; margin: 0 4px;}
+			button { margin: .5em .4em .5em 0; cursor: pointer; padding: .2em .6em .3em .6em; line-height: 1.4em; }
+			.lindicator { padding: 8px; visibility: hidden; }
+
+			#pl { display: table; }
+			.pl_row { display: table-row; cursor: default; height: 18px; }
+			.pl_c1  { width: 15%; display: table-cell; padding: 2px; text-align: right; vertical-align: middle; }
+			.pl_c2  { width: 80%; display: table-cell; padding: 2px; vertical-align: middle; }
+			.pl_c3  { width: 5%; display: table-cell; padding: 2px; text-align: right; vertical-align: middle; }
+			.pl_even{ background: #f8f8f8; }
+			.pl_prev{ color:DarkGray; }
+			.pl_selected { background: #daeaff; border: 1px solid white; }
+			.bbl { border-left: 1px solid gray; } /* border black left */
+			.bbm { border-top: 1px solid gray; border-bottom: 1px solid gray; } /* border black top and bottom */
+			.bbr { border-right: 1px solid gray; } /* border black right */
+			.bwl { border-left: 1px solid white; } /* border white left */
+			.bwm { border-top: 1px solid white; border-bottom: 1px solid white; } /* border white top and bottom */
+			.bwr { border-right: 1px solid white; } /* border white right */
+			.bbt { border-bottom: 1px solid white; border-top: 1px solid gray; } /* border black top */
+			.pl-album { color: gray;}
+
+			#playlist { margin-right: -10px; margin-left: -10px; }
+
+			.br_o { background:#f8f8f8; } /* odd file browser row */
+			.br_g { color:#a5a5a5; }	/* inactive file browser row */
+
+			hr { border: 0; border-bottom: 1px #b0b0b0 solid; }
+			#progressbar { cursor: pointer; margin-bottom: 12px; }
+			#playingtitle { float: left; font-size: 1em; padding: 0.25em; }
+			#playingtime { float: right; font-size: 1em; padding: 0.25em; } 
+			#browse_table { width: 100%; /*height: 85%;*/ overflow-y: hidden; overflow-x:hidden; }
+			#aa_pane { opacity: .95; width: 233px; display: none; z-index: 2; cursor: move; margin: 0px;}
+
+			#querylist { height: 300px; overflow: visible;}
+			#querylist #qr { cursor: pointer; }
+			.qr_selected { background: #daeaff; }
+
+			#tooltip { background: #ededed; padding: 2px; border: 1px solid gray; display: none; z-index: 1000; }
+
+			.dragplacer-top div { border-top: 1px double red;}
+			.dragplacer-bottom div { border-bottom: 1px double red;}
+		</style>	
+	</head>
+	<body>
+	<div id="wnd">
+		<ul id="buttons" class="ui-widget ui-helper-clearfix" style="float: left;">
+		<li class="btncmd ui-state-default ui-corner-all" style="margin-left: 0px;" title="Stop" id="Stop"><span class="ui-icon ui-icon-stop"></span></li>
+		<li class="btncmd ui-state-default ui-corner-all" title="Start" id="Start"><span class="ui-icon ui-icon-play"></span></li>
+		<li class="btncmd ui-state-default ui-corner-all" title="Play or pause (Space)" id="PlayOrPause"><span class="ui-icon ui-icon-pause"></span></li>
+		<li class="btncmd ui-state-default ui-corner-all" title="Previous" id="StartPrevious"><span class="ui-icon ui-icon-seek-first"></span></li>
+		<li class="btncmd ui-state-default ui-corner-all" title="Next" id="StartNext"><span class="ui-icon ui-icon-seek-end"></span></li>
+		<li class="btncmd ui-state-default ui-corner-all" title="Random" id="StartRandom"><span class="ui-icon ui-icon-help"></span></li>
+		<li class=""></li>
+		<li class="ui-state-default ui-corner-all" title="Browse files" id="browse_btn"><span class="ui-icon ui-icon-folder-open"></span></li>
+		<li class="ui-state-default ui-corner-all" title="Search media library" id="search_btn"><span class="ui-icon ui-icon-search"></span></li>
+		<li class="ui-state-default ui-corner-all" title="Album art" id="aa_btn"><span class="ui-icon ui-icon-image"></span></li>
+		<li class="ui-state-default ui-corner-all" title="Extended controls" id="pbs_btn"><span class="ui-icon ui-icon-gear"></span></li>
+		<li class="ui-state-default ui-corner-all" id="mute"><span class="ui-icon ui-icon-volume-off"></span></li>
+		<li id="vol"><!--<span>--><div id="volume" style="width: 150px; margin: 0.5em"></div><!--</span>--></li>
+		</ul>
+		<div id="loading" class="lindicator">&nbsp;&nbsp;<img src="img/loading.gif"></div>
+		<p><div id="progressbar"><div id="playingtitle"></div><div id="playingtime"></div></div>
+
+		<div id="tabs" class="ui-tabs ui-helper-clearfix">
+			<ul>
+				<li><a href="#t"></a></li>
+			</ul>
+			<div id="t" class="ui-tabs-hide">
+				<div id="pageslider" style="margin-bottom:8px;"></div>
+				<div id="playlist"></div>
+				<hr style="margin-right: -1.5em; margin-left: -1.5em;">
+				<div id="summary"></div>
+  	        	</div>
+		</div>
+	</div>
+		<div id="pbs_dlg" title="Extended controls">
+			<p>Playlist:</p>
+			<ul id="buttons" class="ui-widget ui-helper-clearfix">
+			<li class="ui-state-default ui-corner-all" title="Add" id="CreatePlaylist"><span class="ui-icon ui-icon-plusthick"></span></li>
+			<li class="ui-state-default ui-corner-all" title="Remove" id="RemovePlaylist"><span class="ui-icon ui-icon-closethick"></span></li>
+			<li class="ui-state-default ui-corner-all" title="Rename" id="RenamePlaylist"><span class="ui-icon ui-icon-pencil"></span></li>
+			<li class="ui-state-default ui-corner-all" title="Empty" id="EmptyPlaylist"><span class="ui-icon ui-icon-clipboard"></span></li>
+			<li class="ui-state-default ui-corner-all" title="Undo (u)" id="Undo"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>
+			<li class="ui-state-default ui-corner-all" title="Redo (r)" id="Redo"><span class="ui-icon ui-icon-arrowreturnthick-1-e"></span></li>
+			<li class="ui-state-default ui-corner-all" title="Refresh" id="RefreshPlaylist"><span class="ui-icon ui-icon-refresh"></span></li>
+			<li class="ui-state-default ui-corner-all" title="Focus on playing" id="FocusOnPlaying"><span class="ui-icon ui-icon-lightbulb"></span></li>
+			</ul>
+			<hr/>
+			<p>Playlist items:</p>
+			<ul id="buttons" class="ui-widget ui-helper-clearfix">
+			<li class="ui-state-default ui-corner-all" title="Enqueue selected items (q)" id="QueueItems"><span class="ui-icon ui-icon-circle-plus"></span></li>
+			<li class="ui-state-default ui-corner-all" title="Dequeue selected items (w)" id="DequeueItems"><span class="ui-icon ui-icon-circle-minus"></span></li>
+			<li class="ui-state-default ui-corner-all" title="Queue random item" id="QueueRandomItems"><span class="ui-icon ui-icon-help"></span></li>
+			<li class="ui-state-default ui-corner-all" title="Flush queue" id="FlushQueue"><span class="ui-icon ui-icon-trash"></span></li>
+			<li class="ui-state-default ui-corner-all" title="Delete (Del)" id="Del"><span class="ui-icon ui-icon-minusthick"></span></li>
+			<li class="ui-state-default ui-corner-all" title="Set cursor" id="SetFocus"><span class="ui-icon ui-icon-pin-s"></span></li>
+			</ul>
+			<hr/>
+			<p>Playback order&nbsp;<select id="PBO"><option value="0">Default</option><option value="1">Repeat (playlist)</option><option value="2">Repeat (track)</option><option value="3">Random</option><option value="4">Shuffle (tracks)</option><option value="5">Shuffle (albums)</option><option value="6">Shuffle (folders)</option></select></p>
+			<p><input type="checkbox" id="SAC">Stop after current</p>
+			<p><input type="checkbox" id="SAQ">Stop after queue</p>
+		</div>
+
+		<div id="aa_pane">
+			<img id="aa_img" style="width: 100%;">
+		</div>
+
+		<div id="search_dlg" title="Search media library">
+			<p><input type="text" size="30" id="searchstr"></p>
+			<hr/>
+			<p><button id="r_btn">Query</button>&nbsp;<span id="querypath"></span></p>
+			<div id="querylist"></div>
+		</div>
+
+		<div id="browse_dlg" title="File browser">
+			<div id="browse_table"></div>
+		</div>
+
+		<div id="error_dlg" title="&#9760; Ouch!">
+			<p>An AJAX error occured.</p>
+			<p>Possible reasons:</p>
+			<ul>
+				<li>JSON parser got stuck on erroneous data;</li>
+				<li>borken connection;</li>
+				<li>god knows what else.</li>
+			</ul>
+			<p><a href="/ajquery/index.html">Restart</a> template or think of something else.</p>
+			<hr/>
+			<textarea id="dbg" cols="90" rows="30"></textarea>
+		</div>
+
+		<span id="tooltip" class="ui-widget"></span>
+	</body>
+</html>
