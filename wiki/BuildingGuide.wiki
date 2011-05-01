@@ -1,6 +1,6 @@
 #summary foo_httpcontrol building guide
 
-It is possible to build the component with MSVC++ and even MSVC++ Express (you have to acquire ATL headers and libraries somewhere though). Solution file in VS2010 format is supplied.
+It is possible to build the component with MSVC++ 2010 and even MSVC++ Express 2010 (you have to acquire ATL headers and libraries somewhere though).
 
 Check out svn to "Build" directory. It will be considered as root of the project.
 
@@ -9,22 +9,17 @@ You need to download additional dependencies:
  * [http://wtl.sourceforge.net/ Windows Template Library] (WTL.zip from now on)
  * [http://www.zlib.net/ Z-Lib compression Library] (zlib.zip from now on)
 
+MSVC++ Express 2010 only: acquire and put ATL headers to Build/foo_httpcontrol/lib/atlmfc/include, and atls.lib to Build/foo_httpcontrol/lib/atlmfc/lib.
+
 Extract the following files to the following places:
  * SDK.zip to Build/foo_httpcontrol/lib
  * WTL.zip to Build/foo_httpcontrol/lib/wtl
  * zlib.zip to Build/foo_httpcontrol/lib/zlib 
 
-MSVC++ Express 2010 only: acquire and put ATL headers to Build/foo_httpcontrol/lib/atlmfc/include, and atls*.lib to Build/foo_httpcontrol/lib/atlmfc/lib.
-
-Supplied project files are suitable for Microsoft Visual Studio 2008. For other MSVS versions you have to convert or create them from scratch by yourself.
-
 Open Build/foo_httpcontrol/foo_httpcontrol.sln in MSVS.
 
 Switch solution configuration to whatever you need: Debug or Release.
 
-Open foobar2000_ATL_helpers project properties (right click on the name). Go to Configuration Properties/C/C++/Addidional Include Directories.
-Add Build/WTL/include to the list.
-
 For zlibstat.lib to link correctly, you have to remove ZLIB_WINAPI preprocessor definition in zlibstat project properties (Configuration properties/C/C++/Preprocessor). Also note that Release version of zlibstat requires assembler, so make sure to choose individual Release-Without-Asm configuration for zlibstatproject if you don't have one.
 
-Here you go, ready to build - use Build/Build solution menu command. After a short while you'll have the foo_httpcontrol.dll in Build/foo_httpcontrol/Release or Build/foo_httpcontrol/Debug directory.
+Please do not use already released component name and/or version number - it will make finding actual errors using fb2k crash tracker much much harder for me. Version/name data can be changed in Build/foo_httpcontrol/src/httpcontrol.cpp.
