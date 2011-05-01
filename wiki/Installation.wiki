@@ -1,0 +1,11 @@
+#summary foo_httpcontrol installation
+
+Extract foo_httpcontrol.dll to foobar2000 components directory (%APPDATA%\foobar2000\user-components\foo_httpcontrol\). 
+Alternatively you can use foobar2000 own installer: foobar2000/Preferences/Components/Install... and point it to foo_httpcontrol zip archive.
+
+Download at least one template (http://www.hydrogenaudio.org/forums/index.php?showtopic=62218 and http://code.google.com/p/foo-httpcontrol/) 
+and follow bundled instructions to install it where it belongs.
+
+Start foobar2000 and modify component preferences according to your taste in preferences (foobar2000/Preferences/Tools/HTTP Control).
+
+Default configuration allows you to access component page on http://127.0.0.1:8888/.

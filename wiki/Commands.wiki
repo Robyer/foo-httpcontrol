@@ -1,0 +1,245 @@
+#summary foo_httpcontrol supported commands
+
+<wiki:toc max_depth="3" />
+
+= Syntax =
+
+Command syntax: `http://>ip<[:<port>]/<?cmd=Command[&param1=param 1[&param2=param 2]][&param3=param 3]>`
+
+= Commands list =
+
+== Playback ==
+
+=== `Stop` ===
+
+Stop playback.
+
+=== `Start` ===
+
+Start playback in active playlist.
+
+  * param1=playlist item starting from 0.
+
+=== `PlayOrPause` ===
+
+Resume or pause playback.
+
+=== `StartRandom` ===
+
+Start playback of random item in active playlist.
+
+=== `StartPrevious` ===
+
+Start playback of previous item in active playlist.
+
+=== `StartNext` ===
+
+Start playback of next item in active playlist.
+
+=== `Volume` ===
+
+Set volume level, in percent.
+  * param1=volume level, 0...100
+
+=== `VolumeDelta` ===
+
+Change volume level by given delta, in percent.
+  * param1=signed delta, -N...N
+
+=== `VolumeDB` ===
+
+Set volume level, in dB.
+  * param1=volume level, 0...665 (0...-66.5 db), or 1000 to mute
+
+=== `VolumeDBDelta` ===
+
+Change volume level by given delta, in db.
+  * param1=signed delta, -N...N (-N/10...N/10 db)
+
+=== `Seek` ===
+
+Seek playing item, by percent.
+  * param1=position, from 0 to 100
+
+=== `SeekDelta` ===
+
+Seek playing item by given delta, in seconds
+  * param1=signed delta
+
+=== `PlaybackOrder`  ===
+
+Change playback order (Default, Repeat (Playlist), Repeat (Track), Random, Shuffle (tracks), Shuffle (Albums), Shuffle (Folders)).
+  * param1=order number, from 0 to 7
+
+=== `SAC` ===
+
+Change stop after current flag (if stop after current feautre is enabled in component preferences).
+ * param1=0 or 1
+
+== Playback Queue ==
+
+=== `QueueItems` ===
+
+Put active playlist items to playback queue.
+ * param1=item indexes separated by any delitemeter
+
+=== `QueueAlbum` ===
+
+Queue album.
+ * param1=item index album search starts from (focused item is used if param1 is omitted)
+
+=== `QueueRandomItems` ===
+
+Queue random items in active playlist.
+ * param1=item count
+
+=== `DequeueItems` ===
+
+Remove specified active playlist items from playback queue.
+ * param1=item indexes separated by any delitemeter
+
+=== `FlushQueue` ===
+
+Flush queue completely.
+
+== `Playlist` ==
+
+=== `EmptyPlaylist` ===
+
+Empty active playlist.
+
+=== `Del` ===
+
+Delete one or more playlist items.
+ * param1=item numbers separated by any delitemeter
+ * param2=optionally specifies playlist index
+
+=== `Undo` ===
+
+Undo changes made to playlist backed up by restore point.
+ * param1=optionally specifies playlist index
+
+=== `Move` ===
+
+Move one or more active playlist items.
+ * param1=item numbers separated by any delitemeter
+ * param2=signed move delta
+
+=== `SetSelection` ===
+
+Set playlist selection.
+ * param1=item numbers separated by any delitemeter, empty to remove selection, ~ to select all
+ * param2=optionally specifies playlist index
+
+=== `SwitchPlaylist` === 
+
+Switch playlist.
+ * param1=playlist index
+
+=== `SwitchPlaylistPage; P` ===
+
+Switch playlist page.
+ * param1=page index
+
+=== `PlaylistItemsPerPage` ===
+
+Set number of playlist items per page.
+ * param1=number of playlist items per page, limited to 16384
+
+=== `SetFocus` ===
+
+Set focus to specific item of active playlist.
+ * param1=item index
+
+=== `FocusOnPlaying` ===
+
+Set focus to playing item.
+
+=== `RemovePlaylist` ===
+
+Removes specified playlist.
+ * param1=playlist index
+
+=== `CreatePlaylist` ===
+
+Creates playlist.
+ * param1=playlist name
+ * param2=insertion point index
+
+=== `RenamePlaylist` ===
+
+Renames playlist.
+ param1=playlist name
+ param2=playlist index
+
+=== `PlayingCommand` ===
+
+Executes context menu command specified in param1 for currently playing item.
+ * param1=case sensitive context menu path. for example: Playback Statistics/Rating/3
+
+=== `SelectionCommand` ===
+
+Executes context menu command specified in param1 for currently selected (or specified list of) items of active playlist. Note that running playlist-specific commands like Remove, Crop, etc is not possible.
+ * param1=case sensitive context menu path, for example: Playback Statistics/Rating/3
+ * param2=item indexes separated by any delimeter (optional)
+
+=== `Sort` ===
+
+Sorts active playlist or its specified items using sort pattern.
+ * param1=sort pattern
+ * param2=item indexes separated by any delimeter (optional)
+
+== File operations ===
+
+=== `Browse` ===
+
+Browse directory.
+ * param1=urlencoded path
+
+To add specified directory to active playlist, use:
+ * param2=EnqueueDir
+
+To add specified directory and its subdirectories to active playlist, use:
+ * param2=EnqueueDirSubdirs
+
+== Media Library ==
+
+=== `SearchMediaLibrary; Search` ===
+
+Search media library.
+ * param1=search query
+
+=== `QueryAdvance` === 
+
+Query media library.
+ * param1=search query
+
+=== `QueryRetrace` === 
+
+Step back in media library query.
+
+== Misc ==
+
+=== `Parse` ===
+
+Parse specified string.
+ * param1=string to parse and return
+
+=== `RefreshPlayingInfo` ===
+
+Update helper macros.
+
+=== `CmdLine` ===
+
+Execute foobar2000 with specific command-line parameters.
+ * param1=command-line parameters
+
+= Notes =
+
+Adding param3=NoResponse to any request suppresses any result output.
+
+Adding param3=templatefile uses specified file templatefile as a template to generate output.
+
+All indexes and numbering are start from 0.
+
+Don't forget to urlencode request values!

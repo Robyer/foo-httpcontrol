@@ -1,0 +1,20 @@
+#summary foo_httpcontrol preferences
+
+= foo_httpcontrol preferences explained =
+
+http://foo-httpcontrol.googlecode.com/files/preferences2.png
+
+ # Specifies the IP address and port used for listening to incoming connections. Both IP address and port must be valid. Make sure port is not used by another program.
+ # Check or uncheck to enable or disable listening for incoming connections.
+ # Opens component page in default browser. Button is inactive if server/listener isn't started.
+ # Limit access to component by setting the allowed IP address. Connections initiated from other addresses will be discarded. Setting this to 0.0.0.0 allows all connections.
+ # Limit access to component by defining a login/password pair. Untick to disable passwords.
+ # Built-in file browser can be limited to certain paths of your file system. It is useful to simplify the browsing process or hide your secret files from prying eyes. For example, setting Allowed paths to d:\music|c:\temp\music|e:\ permits browsing only in these three file system branches.
+ # You can specify additional file extensions to be treated as playable files by built-in file browser. It is required for opening archives containing playable files.
+ # Removes all files which foobar2000 core considers unplayable from built-in file browser.
+ # Specifies path where component will look for template files. Pressing Open opens specified or default directory in Explorer. If not sure, leave it blank.
+ # Enables gzip compression of component output. Enabling it is usually harmless and quite beneficial as component generates a lot of text which is very compressible. Disable if you are using some funky browser.
+ # Enables logging of component access data to foobar2000 console. Useful for debugging etc.
+ # Adds "Stop after queue" item in Playback menu. It works exactly as it's named, stops playback when end of playback queue is reached.
+
+Don't forget to press Apply or your changes won't have any effect until fb2k is restarted.

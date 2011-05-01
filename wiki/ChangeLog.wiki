@@ -1,0 +1,24 @@
+#summary foo_httpcontrol changelog
+
+= Changelog 2011 =
+
+v0.97.7 7 Mar
+
+  * add: albumart_limit_size config key, defines maximum albumart size in bytes to retrieve. default is 0, no limit
+  * add: albumart_prefer_embedded config key, defines whether to prefer embedded albumart over external. default is 0, prefer external albumart
+  * add: Sort command, sorts whole active playlist or item list specified in param2, using sort pattern param1
+  * fix: setting playlist_items_per_page config key to 0 disables playlist retrieve
+  * fix: SelectionCommand additionally accepts list of items to be processed in param2
+
+v0.97.6 24 Jan
+  * add: additional exception detection
+  * add: removed stripping non-text chars in json responses as most of the 3rd party templates requests have cr/lf's in wrong places
+
+v0.97.5 22 Jan
+
+  * fix: possible crash during media library query
+  * add: strip non-text chars in json responses
+
+= Changelog 2010 =
+
+See documentation bundled with older versions.
