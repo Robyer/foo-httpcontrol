@@ -2,6 +2,17 @@
 
 = Changelog 2011 =
 
+v0.97.8 14 May
+
+  * add: removed deprecated commands VolumeUp, VolumeDown, DequeueTrack;
+  * add: FormatTitles cmd, parses the list of titleformatting strings passed in param1 (multiple values must be separated by |) for active playlist item defined in param2 or currently played item if param2 is omitted, and returns the data in json array format. make sure to pass reference to any filename with json extension in param3, so response has proper the content type. if param3 is omitted, content type is set to default text/html and might confuse some browsers.
+
+ for example, calling ?cmd=FormatTitles&param1=%artist%|%album%|%bitrate%&param2=0&param3=format.json
+ formats supplied titleformatting strings for active playlist item number 0, resulting in following response:
+ ["Ozric Tentacles","Spirals in Hyperspace","980"]
+
+  * add: ability to ignore files with specific extensions in file browser: see "Ignored formats" preferences field;
+
 v0.97.7 7 Mar
 
   * add: albumart_limit_size config key, defines maximum albumart size in bytes to retrieve. default is 0, no limit
