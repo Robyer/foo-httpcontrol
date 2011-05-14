@@ -241,7 +241,7 @@ public:
 		if (GetModuleFileNameW(instance, path, MAX_PATH) != 0)
 			httpc::fb2k_path = pfc::stringcvt::string_utf8_from_wide((const wchar_t*)path);
 		else
-			foo_info("error: coudln't retrieve foobar2000 executable path");
+			foo_info("coudln't retrieve foobar2000 executable path");
 
 		httpc::build_restrict_to_path_list();
 

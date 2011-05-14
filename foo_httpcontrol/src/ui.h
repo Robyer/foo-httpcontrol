@@ -10,7 +10,7 @@ namespace httpc
 {
 namespace ui 
 {
-	typedef pfc::map_t<pfc::string8, void (* )(pfc::string_base &), pfc::comparator_strcmp> funcs_map;
+	typedef pfc::map_t<const char *, void (* )(pfc::string_base &), pfc::comparator_strcmp> funcs_map;
 
 	extern pfc::string8_fast_aggressive tpl;
 	extern pfc::string8_fast_aggressive *result_ptr; // playlist renderers hack to avoid data copying around

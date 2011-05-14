@@ -1,9 +1,15 @@
 #include "stdafx.h"
 #include "utils.h"
 
-void foo_info(pfc::string8 msg)
+void foo_info(const char *msg)
 {
-	console::formatter() << foo_name << ": " << msg;
+	if (cfg.main.log_access)
+		console::formatter() << foo_name << ": " << msg;
+};
+
+void foo_error(const char *msg)
+{
+	console::formatter() << foo_name << " error: " << msg;
 };
 
 void str_to_bitarray(pfc::string_base &str, bit_array_bittable &arr) // helper string to bit_array
