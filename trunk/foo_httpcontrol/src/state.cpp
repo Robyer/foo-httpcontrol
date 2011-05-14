@@ -553,7 +553,8 @@ namespace httpc {
 				if (_stricmp(httpc::extensions[j], "cda") == 0)
 					return j;
 
-		for (size_t j = 0; j < httpc::extensions.get_count(); ++j)
+		t_size l = httpc::extensions.get_count();
+		for (size_t j = 0; j < l; ++j)
 		{
 			size_t ext_len = strlen(httpc::extensions[j]);
 
@@ -573,56 +574,66 @@ namespace httpc {
 		extension_names.remove_all();
 
 		{
-		pfc::string8_fastalloc mask;
-		pfc::string8_fastalloc name;
+			pfc::string8_fastalloc mask;
+			pfc::string8_fastalloc name;
 
-		service_enum_t<input_file_type> e;
-		service_ptr_t<input_file_type> ptr;
-		if (e.first(ptr)) do {
-			unsigned n,m = ptr->get_count();
-			for(n=0;n<m;n++)
-			{
-				mask.reset();
-				name.reset();
-				if (ptr->get_mask(n,mask) && ptr->get_name(n,name))
+			pfc::list_t<pfc::string8> ignored_extensions;
+			pfc::splitStringSimple_toList(ignored_extensions, '|', cfg.main.ignored_formats);
+
+			for (t_size i = 0; i < ignored_extensions.get_count(); ++i)
+				ignored_extensions[i] = trim(ignored_extensions[i]);
+
+			service_enum_t<input_file_type> e;
+			service_ptr_t<input_file_type> ptr;
+			if (e.first(ptr)) do {
+				unsigned n,m = ptr->get_count();
+				for(n=0;n<m;n++)
 				{
-					if (!strchr(mask,'|'))
+					mask.reset();
+					name.reset();
+					if (ptr->get_mask(n,mask) && ptr->get_name(n,name))
 					{
-						pfc::string8_fastalloc extension;
-
-						size_t i = 0;
-
-						while(i < mask.get_length())
+						if (!strchr(mask,'|'))
 						{
-							if (mask[i] == ';')
+							pfc::string8_fastalloc extension;
+
+							size_t i = 0;
+
+							while(i < mask.get_length())
 							{
-								extensions.add_item(pfc::string_simple(extension));
-								extension_names.add_item(pfc::string_simple(name));
+								if (mask[i] != '*' && mask[i] != '.' && mask[i] != ';')
+									extension.add_char(mask[i]);
 
-								extension.reset();
+								if (mask[i] == ';' || i == mask.get_length() - 1)
+								{
+									bool ignored = false;
+
+									for (t_size j = 0; j < ignored_extensions.get_count(); ++j)
+										if (pfc::stringCompareCaseInsensitive(extension, ignored_extensions[j]) == 0)
+										{
+											ignored = true;
+											break;
+										}
+
+									if (!ignored)
+									{
+										extensions.add_item(pfc::string_simple(extension));
+										extension_names.add_item(pfc::string_simple(name));
+									}
+
+									extension.reset();
+								}
+
+								++i;
 							}
-							else
-								if (mask[i] != '*' &&
-									mask[i] != '.')
-								extension.add_char(mask[i]);
-
-							++i;
-						}
-
-						if (extension.get_length() != 0)
-						{
-							extensions.add_item(pfc::string_simple(extension));
-							extension_names.add_item(pfc::string_simple(name));
-							extension.reset();
 						}
 					}
 				}
-			}
-		} while(e.next(ptr));
+			} while(e.next(ptr));
 		}
 
 		pfc::list_t<pfc::string8> extra_extensions;
-		pfc::splitStringSimple_toList(extra_extensions, "|", cfg.main.extra_formats);
+		pfc::splitStringSimple_toList(extra_extensions, '|', cfg.main.extra_formats);
 		pfc::string8 ext;
 		for (t_size i = 0; i < extra_extensions.get_count(); ++i)
 		{
@@ -631,7 +642,7 @@ namespace httpc {
 			if (ext.get_length())
 			{
 				extensions.add_item(ext);
-				extension_names.add_item("");
+				extension_names.add_item("Extra format");
 			}
 		}
 

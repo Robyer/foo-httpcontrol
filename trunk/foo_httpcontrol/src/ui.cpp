@@ -839,7 +839,7 @@ namespace ui
 		char chr;
 		pfc::string8_fast_aggressive macro;
 				
-		pfc::map_t<pfc::string8_fast_aggressive, pfc::string8_fast_aggressive> macro_values;
+		pfc::map_t<pfc::string8_fast_aggressive, pfc::string8_fast_aggressive, pfc::comparator_strcmp> macro_values;
 		result_ptr = &res;
 
 		for (t_size i = 0; i < len; ++i)
@@ -860,7 +860,7 @@ namespace ui
 						if (gen::func)
 							(*gen::func)(macro_values[macro]);
 						else
-							foo_info(pfc::string8("unknown macro: ") << macro);
+							foo_error(pfc::string8("unknown macro: ") << macro);
 					}
 
 					res.add_string(macro_values[macro]);
@@ -929,8 +929,8 @@ namespace ui
 			LocalFree(lpMsgBuf);
 
 			pfc::string8 body;
-			body = pfc::string8() <<  "<p>Error reading " << request << "</p><p><small><font color=\"red\">Check foobar2000 console (View/Console) for details.</font></small></p></p><p><a href=\"/" << tcfg.get().root << tcfg.get().url << "\">Open " << tcfg.get().root << " template</a></p>";
-			foo_info(pfc::string_formatter() << "error loading " << path << " (" << errormsg << (t_size)errorcode << ")");
+			body = pfc::string8() <<  "<p>Error reading " << request << "</p><p><font color=\"red\">Check foobar2000 console (View/Console) for error details.</font></p></p><p><a href=\"/" << tcfg.get().root << tcfg.get().url << "\">Open " << tcfg.get().root << " template</a></p>";
+			foo_error(pfc::string_formatter() << "couldn't read " << path << " (" << errormsg << (t_size)errorcode << ")");
 			generate_html_response(buffer, pfc::string8() << "Invalid request", body);
 		}
 	}
@@ -979,11 +979,11 @@ namespace ui
 		}
 		else
 		{
-			body << "<p>Something went wrong: no templates found!</p><p><small><font color=\"red\">Check foobar2000 console (View/console) for details.</font></p></p>";
-			foo_info(pfc::string_formatter() << "error: no templates found in " << httpc::srv_home_dir);
+			body << "<p>Something went wrong: no templates found!</p><p>Possible explanation: you forgot to get yourself a template, or extracted it into a wrong place.</p><p><font color=\"red\">Check foobar2000 console (View/console) for path where templates are expected to be found.</font></p>";
+			foo_error(pfc::string_formatter() << "no templates found in " << httpc::srv_home_dir);
 		}
 
-		body << "<p><a href=\"" << forum <<  "\">Get more templates!</a></p>";
+		body << "<p><a href=\"" << forum <<  "\">Get templates!</a></p>";
 
 		generate_html_response(response, pfc::string_formatter() << "Installed templates", body);
 	}

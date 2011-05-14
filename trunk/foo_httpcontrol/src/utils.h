@@ -1,7 +1,8 @@
 #ifndef __FOO_UTILS_H__
 #define __FOO_UTILS_H__
 
-void foo_info(pfc::string8 msg); // push some info to console
+void foo_info(const char *msg); // push verbose info to console if logging is enabled
+void foo_error(const char *msg); // push error to console
 
 void str_to_bitarray(pfc::string_base &str, bit_array_bittable &arr); // convert c-style string to pfc::bitarray
 void str_to_list(pfc::string_base &str, pfc::list_t<t_size> &list); // convert c-style string to pfc::list

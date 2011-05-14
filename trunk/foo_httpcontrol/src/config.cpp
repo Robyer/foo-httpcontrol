@@ -27,6 +27,7 @@ void config_main::copy(const config_main &cfg)
 	stop_after_queue_enable = cfg.stop_after_queue_enable;
 	gzip_enable = cfg.gzip_enable;
 	extra_formats = cfg.extra_formats;
+	ignored_formats = cfg.ignored_formats;
 }
 
 void config_main::reset()
@@ -48,6 +49,7 @@ void config_main::reset()
 	stop_after_queue_enable = false;
 	gzip_enable = false;
 	extra_formats = "zip|rar";
+	ignored_formats = "";
 }
 
 void config_main::get_data_raw(stream_writer * p_stream,abort_callback & p_abort)
@@ -69,6 +71,7 @@ void config_main::get_data_raw(stream_writer * p_stream,abort_callback & p_abort
 	p_stream->write_lendian_t(stop_after_queue_enable, p_abort);
 	p_stream->write_lendian_t(gzip_enable, p_abort);
 	p_stream->write_string(extra_formats, p_abort);
+	p_stream->write_string(ignored_formats, p_abort);
 }
 
 void config_main::set_data_raw(stream_reader * p_stream,unsigned p_sizehint,abort_callback & p_abort)
@@ -90,6 +93,7 @@ void config_main::set_data_raw(stream_reader * p_stream,unsigned p_sizehint,abor
 	p_stream->read_lendian_t(stop_after_queue_enable, p_abort);
 	p_stream->read_lendian_t(gzip_enable, p_abort);
 	p_stream->read_string(extra_formats, p_abort);
+	p_stream->read_string(ignored_formats, p_abort);
 }
 
 bool config_main::operator == (const config_main &c)
@@ -110,7 +114,8 @@ bool config_main::operator == (const config_main &c)
 		&&(c.allow_commandline == allow_commandline)
 		&&(c.stop_after_queue_enable == stop_after_queue_enable)
 		&&(c.gzip_enable == gzip_enable)
-		&&(c.extra_formats == extra_formats));
+		&&(c.extra_formats == extra_formats)
+		&&(c.ignored_formats == ignored_formats));
 }
 
 void config_misc::reset()
@@ -276,14 +281,9 @@ void preferences_page_main::OnCommand(UINT uNotifyCode, int nID, CWindow wndCtl)
 			cfg_main_new.extra_formats = string_utf8_from_window(GetDlgItem(nID));
 			cfg_main_new.extra_formats = trim(cfg_main_new.extra_formats);
 			break;
-/*		case IDC_ALLOW_COMMANDLINE | (BN_CLICKED << 16):
-			cfg_main_new.allow_commandline = IsDlgButtonChecked(nID) == BST_CHECKED;
-			break;*/
-/*		case IDC_PL_RETRIEVE | (BN_CLICKED << 16):
-			cfg_main_new.retrieve_playlist = IsDlgButtonChecked(nID) == BST_CHECKED;
-			break;*/
-		case IDC_ALBUMART_EMBEDDED_RETRIEVE | (BN_CLICKED << 16):
-			cfg_main_new.albumart_embedded_retrieve = IsDlgButtonChecked(nID) == BST_CHECKED;
+		case IDC_IGNORED_FORMATS | (EN_CHANGE << 16):
+			cfg_main_new.ignored_formats = string_utf8_from_window(GetDlgItem(nID));
+			cfg_main_new.ignored_formats = trim(cfg_main_new.ignored_formats);
 			break;
 		case IDC_STOP_AFTER_QUEUE_ENABLE | (BN_CLICKED << 16):
 			cfg_main_new.stop_after_queue_enable = IsDlgButtonChecked(nID) == BST_CHECKED;
@@ -338,10 +338,8 @@ void preferences_page_main::updateDialog()
 	uSetDlgItemText(m_hWnd,IDC_CONTROL_PASSWORD,cfg_main_new.control_credentials_password);
 	uSetDlgItemText(m_hWnd,IDC_CONTROL_PATH,cfg_main_new.restrict_to_path);
 	uSetDlgItemText(m_hWnd,IDC_EXTRA_FORMATS,cfg_main_new.extra_formats);
+	uSetDlgItemText(m_hWnd,IDC_IGNORED_FORMATS,cfg_main_new.ignored_formats);
 	uSetDlgItemText(m_hWnd,IDC_SERVER_ROOT,cfg_main_new.server_root);
-//	CheckDlgButton(IDC_ALLOW_COMMANDLINE,cfg_main_new.allow_commandline);
-//	CheckDlgButton(IDC_PL_RETRIEVE,cfg_main_new.retrieve_playlist);
-	CheckDlgButton(IDC_ALBUMART_EMBEDDED_RETRIEVE,cfg_main_new.albumart_embedded_retrieve);
 	CheckDlgButton(IDC_STOP_AFTER_QUEUE_ENABLE,cfg_main_new.stop_after_queue_enable);
 	CheckDlgButton(IDC_GZIP_ENABLE,cfg_main_new.gzip_enable);
 }
@@ -374,28 +372,36 @@ void preferences_page_main::reset() {
 }
 
 void preferences_page_main::apply() {
-    cfg.main = cfg_main_new;
+	if (httpc::control::running_threads == 0)
+	{
+		cfg.main = cfg_main_new;
 
-	httpc::choose_srv_home_dir();
+		httpc::choose_srv_home_dir();
 
-	httpc::control_credentials_auth_hash_update();
+		httpc::control_credentials_auth_hash_update();
 
-	httpc::get_registered_extensions();
+		httpc::get_registered_extensions();
 
-	httpc::build_restrict_to_path_list();
+		httpc::build_restrict_to_path_list();
 
-	if (cfg.main.startserver != httpc::control::is_active())
-		httpc::control::set_active(cfg.main.startserver);
+		if (cfg.main.startserver != httpc::control::is_active())
+			httpc::control::set_active(cfg.main.startserver);
 	
-	update_server_status();
+		update_server_status();
 
-	httpc::should_update_playlist = true;
-	httpc::should_update_queue = true;
+		httpc::should_update_playlist = true;
+		httpc::should_update_queue = true;
 
-	if (!cfg.main.stop_after_queue_enable)
-		cfg.misc.stop_after_queue = false;
+		if (!cfg.main.stop_after_queue_enable)
+			cfg.misc.stop_after_queue = false;
 
-	onChanged();
+		onChanged();
+	}
+	else
+	{
+		popup_message::g_show(pfc::string_formatter() << "Client request proceesing is active, settings not saved.\nPlease press Apply when request is processed.", 
+			"Warning", popup_message::icon_error);
+	}
 }
 
 void preferences_page_main::onChanged() {

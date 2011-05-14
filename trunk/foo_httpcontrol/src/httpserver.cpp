@@ -2,7 +2,6 @@
 #include "ui.h"
 #include "browsefiles.h"
 #include "httpserver.h"
-#include "../lib/zlib/zlib.h"
 
 char *access_denied_body = "<h1>403 Forbidden</h1><p>You don't have permission to access this document on this server.</p>";
 char *content_type_str = "Connection: close\r\nContent-Type: text/html; Charset=UTF-8;";
@@ -10,9 +9,16 @@ char *content_no_refresh = "Cache-Control: no-cache\r\nPragma: no-cache\r\nExpir
 
 mimetypes mime;
 
+namespace httpc {
+	namespace control {
+		pfc::string8 command_result;
+	}
+}
+
 void foo_httpserv::log(pfc::string_base &cmd, pfc::string_base &param1, pfc::string_base &param2, pfc::string_base &param3, char *remotehost, pfc::string_base &request_url)
 {
 	pfc::string8 bufs;
+
 	char buf[32] = { };
 	GetDateFormatA(NULL, 0, NULL, "[ dd.MM ", buf,31);
 	bufs << buf;
@@ -273,7 +279,7 @@ void foo_httpserv::process_request()
 	{
 		HANDLE handle = WSACreateEvent();
 		if (WSAEventSelect(m_con->m_socket, handle, FD_READ | FD_CLOSE | FD_OOB) != 0)
-			foo_info("WSAEventSelect in process_request failed");
+			foo_error("WSAEventSelect in process_request failed");
 		
 		// sleeping while browser decided do keep stale tcp connection opened
 		while (r == 0 && ret != WSA_INVALID_HANDLE && (ret == WSA_WAIT_IO_COMPLETION || ret == WSA_WAIT_TIMEOUT) )
@@ -337,8 +343,8 @@ void foo_httpserv::process_request()
 
 					if (auth && strcmp(auth, httpc::control_credentials_auth_hash) !=  0 || !auth )
 					{
-						if (auth && cfg.main.log_access)
-							foo_info(pfc::string_formatter() << "AUTH request from " << remotehost << " denied. Auth: " << auth);
+						if (auth)
+							foo_error(pfc::string_formatter() << "AUTH request from " << remotehost << " denied. Auth: " << auth);
 	
 						free(auth);
 
@@ -360,11 +366,11 @@ void foo_httpserv::process_request()
 					if (!tcfg.loadtemplate(configpath, args[0]))
 					{
 						pfc::string8 body;
-						body << "<p>Error loading template configuration file:<br>foo_httpcontrol_data\\" << args[0] << "\\config</p><p><small><font color=\"red\">Check foobar2000 console (View/Console) for details.</font></small></p>";
+						body << "<p>Error loading template configuration file:<br>foo_httpcontrol_data\\" << args[0] << "\\config</p><p>Most likely it happened because the directory are trying to open doesn't contain template, or template files there are incomplete.<p><font color=\"red\">Check foobar2000 console (View/Console) for error details.</font></p>";
 						body << "<p><a href=\"/\">Show installed templates</a></p>";
 						httpc::ui::generate_html_response(m_err_str, pfc::string_formatter() << "Template error", body);
 						set_reply_string("HTTP/1.0 404 Not Found");
-						foo_info(pfc::string_formatter() << "error loading " << configpath);
+						foo_error(pfc::string_formatter() << "couldn't load " << configpath);
 						set_reply_header(content_type_str);
 						send_reply();
 						continue;
@@ -502,7 +508,7 @@ void foo_httpserv::process_request()
 						set_reply_header(content_no_refresh);
 						send_reply();
 						httpc::ui::generate_html_response(m_err_str, pfc::string_formatter() << "404 Not Found", pfc::string_formatter() << "<h1>404 Not Found</h1>The requested url " << request_url << " was not found on the server.");
-						foo_info(pfc::string_formatter() << "error loading " << fullpathfile);
+						foo_error(pfc::string_formatter() << "couldn't load " << fullpathfile);
 					}
 				}
 			}
@@ -536,6 +542,11 @@ void foo_httpserv::process_request()
 						{
 							httpc::ui::set_buffer_from_string(param1);
 							httpc::ui::parse_buffer_controls(show, timer);
+						}
+						else if (httpc::control::command_result.get_length())
+						{
+							show = httpc::control::command_result;
+							httpc::control::command_result.reset();
 						}
 						else
 						if (strcmp(cmd, "Browse") == 0)
@@ -613,7 +624,7 @@ void foo_httpserv::process_request()
 				}
 
 				if (send_result != 0)
-					foo_info(pfc::string_formatter() << "send error: " << send_result << " on request: " << request_url);
+					foo_error(pfc::string_formatter() << "send: " << send_result << " on request: " << request_url);
 
 				r = 4;
 

@@ -13,6 +13,7 @@ namespace httpc{
 		extern volatile bool listener_started;
 		extern volatile bool listener_error;
 		extern volatile bool listener_stop;
+		extern volatile int running_threads;
 		extern pfc::string8 listener_info;
 		extern void set_active(bool activate);
 		extern bool is_active();
@@ -43,6 +44,7 @@ public:
 	bool			stop_after_queue_enable;
 	bool			gzip_enable;
 	pfc::string8	extra_formats;
+	pfc::string8	ignored_formats;
 
 	config_main() { reset(); }
 	config_main(const config_main &cfg) { copy(cfg); }

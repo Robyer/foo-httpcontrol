@@ -18,8 +18,12 @@ extern char *auth_str;
 extern char *content_type_str;
 extern char *content_no_refresh;
 
+class foo_httpserver_command;
+
 namespace httpc {
 	namespace control {
+		typedef pfc::map_t<const char *, bool (* )(foo_httpserver_command *), pfc::comparator_strcmp> commands_map;
+
 		extern HANDLE process_command_event;
 
 		extern void process_command(pfc::string_base &cmd, pfc::string_base &param1, pfc::string_base &param2, pfc::string_base &param3);
@@ -82,8 +86,8 @@ private:
 
 class mimetypes {
 private:
-	pfc::map_t<pfc::string_simple, pfc::string_simple, pfc::comparator_stricmp_ascii> m_mimeTypes;
-	pfc::map_t<pfc::string_simple, bool, pfc::comparator_stricmp_ascii> m_compressibleTypes;
+	pfc::map_t<const char *, const char *, pfc::comparator_stricmp_ascii> m_mimeTypes;
+	pfc::map_t<const char *, bool, pfc::comparator_stricmp_ascii> m_compressibleTypes;
 public:
 
 	mimetypes ()

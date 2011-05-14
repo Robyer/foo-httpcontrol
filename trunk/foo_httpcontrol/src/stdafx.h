@@ -15,5 +15,6 @@
 #include "../lib/jnetlib/webserver.h"
 #include "utils.h"
 #include "config.h"
+#include "../lib/zlib/zlib.h"
 
 // TODO: reference additional headers your program requires here
