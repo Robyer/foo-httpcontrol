@@ -189,6 +189,13 @@ Sorts active playlist or its specified items using sort pattern.
  * param1=sort pattern
  * param2=item indexes separated by any delimeter (optional)
 
+=== `FormatTitles` ===
+
+Tileformats a list of titleformatting string using playing or certain active playlist item and returns result as json array.
+ * param1=list of titleformatting strings (separated by |)
+ * param2=active playlist item index (optional, playing item is used if omitted)
+ * param3=file name to guess the resulting content type from, use file.json
+
 == File operations ===
 
 === `Browse` ===
