@@ -4,7 +4,7 @@
 
 = Syntax =
 
-Command syntax: `http://>ip<[:<port>]/<?cmd=Command[&param1=param 1[&param2=param 2]][&param3=param 3]>`
+Command syntax: `http://>ip<[:<port>]/installed_template_name/<?cmd=Command[&param1=param 1[&param2=param 2]][&param3=param 3]>`
 
 = Commands list =
 

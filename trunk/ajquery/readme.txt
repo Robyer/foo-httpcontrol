@@ -1,5 +1,5 @@
 Asynchronious foo_httpcontrol template
-0.67 09 Apr 2011 http://code.google.com/p/foo-httpcontrol/
+0.68 http://code.google.com/p/foo-httpcontrol/
 
 *** Requirements
 
@@ -49,6 +49,9 @@ Asynchronious foo_httpcontrol template
 	want to permanently modify playlist page size.
 
 *** Release history 2011
+
+	       0.68
+		add:	sanitizing cr/lf characters with $fix_eol() titleformatting in playlist data;
 
 	09 Apr 0.67
 		fix:	wrong now playing info when playing first track;

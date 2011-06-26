@@ -1,5 +1,5 @@
 default braindead foo_httpcontrol template
-1.0 07 Mar 2011 piercemind@gmail.com http://code.google.com/p/foo-httpcontrol/
+1.1 26 Jun 2011 piercemind@gmail.com http://code.google.com/p/foo-httpcontrol/
 
 *** Requirements
 
@@ -32,6 +32,9 @@ default braindead foo_httpcontrol template
 	want to modify playlist page size.
 
 *** Release history 2011
+
+        26 Jun 1.1
+		removed obsolete "Empty Playlist" button from file browser;
 
 	07 Mar 1.0
 		Initial release;

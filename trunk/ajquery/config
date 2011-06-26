@@ -5,7 +5,7 @@
 [foo_httpcontrol]
 url=/index.html
 ; defines formatting of a playlist row using foobar2000 titleformatting.
-playlist_row={"a":"$replace(%artist%,\,\\,",\")","b":"$replace(%album%,\,\\,",\")","n":"$if(%queue_indexes%,'('%queue_indexes%') ',)$ifgreater(%totaldiscs%,1,D%discnumber%.,)%tracknumber%","t":"$replace(%title%,\,\\,",\")","l":"%length%","ls":"%length_seconds%","d":"%date%"}
+playlist_row={"a":"$fix_eol($replace(%artist%,\,\\,",\"))","b":"$fix_eol($replace(%album%,\,\\,",\"))","n":"$if(%queue_indexes%,'('%queue_indexes%') ',)$ifgreater(%totaldiscs%,1,D%discnumber%.,)%tracknumber%","t":"$fix_eol($replace(%title%,\,\\,",\"))","l":"%length%","ls":"%length_seconds%","d":"%date%"}
 ; defines formatting of a helper macros using foobar2000 titleformatting.
 helper1=[%title% - ]
 helper2=[%artist% - %title%]
