@@ -2,6 +2,9 @@
 
 = Changelog 2011 =
 
+v0.97.9 04 Jul
+  * fix: FormatTitles command results are now proper for now playing context;
+
 v0.97.8 14 May
 
   * add: removed deprecated commands VolumeUp, VolumeDown, DequeueTrack;
