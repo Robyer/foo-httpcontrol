@@ -995,8 +995,10 @@ namespace control
 		{
 			static_api_ptr_t<titleformat_compiler>()->compile_safe(title_script,titles.get_item(i));
 
-			if (param2 == pfc::infinite_size && pc->get_now_playing(item_ptr)
-			|| param2 != pfc::infinite_size && plm->activeplaylist_get_item_handle(item_ptr, param2))
+			if (param2 == pfc::infinite_size && (pc->is_playing() || pc->is_paused()))
+				pc->playback_format_title(NULL,formatted_title,title_script,NULL,playback_control::display_level_all);
+			else 
+			if (param2 != pfc::infinite_size && plm->activeplaylist_get_item_handle(item_ptr, param2))
 				item_ptr->format_title(NULL, formatted_title, title_script, NULL);
 			else
 				formatted_title.reset();
