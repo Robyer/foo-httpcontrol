@@ -2,6 +2,10 @@
 
 = Changelog 2011 =
 
+v0.97.11 20 Jul
+  * fix: crash on unknown file format requests;
+  * fix: inability to send zero length files;
+
 v0.97.9 04 Jul
   * fix: FormatTitles command results are now proper for now playing context;
 

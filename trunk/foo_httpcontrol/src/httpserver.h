@@ -133,16 +133,17 @@ public:
 
 		if (extension != NULL)
 		{
-			pfc::string_simple ext = extension;
+//			pfc::string_simple ext = extension;
 
-			compressible = m_compressibleTypes[ext];
-			return m_mimeTypes[ext];
+			if (m_mimeTypes.have_item(extension))
+			{
+				compressible = m_compressibleTypes[extension];
+				return m_mimeTypes[extension];
+			}
 		}
-		else
-		{
-			compressible = false;
-			return "";
-		}
+
+		compressible = false;
+		return "";
 	}
 };
 

@@ -166,10 +166,12 @@ size_t foo_httpserv::send_file(pfc::string_base &filepath)
 				send_ret = SEND_IO_ERROR;
 				break;
 			}
-			else if (bytesread <= 0)
+			
+			send_ret = send_data(filebuf, bytesread);
+
+			if (bytesread <= 0)
 				break;
 
-			send_ret = send_data(filebuf, bytesread);
 		} while (bytesread > 0 && send_ret == SEND_OK && !httpc::control::listener_stop);
 
 		CloseHandle(inFile);
@@ -451,7 +453,12 @@ void foo_httpserv::process_request()
 							if (p3_mime.get_length())
 								content_type << p3_mime;
 						else
-							content_type << mime.get_content_type(request_url, gzip_compressible);
+						{
+							p3_mime = mime.get_content_type(request_url, gzip_compressible);
+
+							if (p3_mime.get_length())
+								content_type << p3_mime;
+						}
 
 						if (content_type.get_length())
 							response_headers << content_type;
