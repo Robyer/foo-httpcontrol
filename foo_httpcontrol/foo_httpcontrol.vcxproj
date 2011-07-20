@@ -45,6 +45,8 @@
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <IncludePath>lib/wtl/include;lib/atlmfc/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\build\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\tmp\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -92,7 +94,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalDependencies>$(SolutionDir)lib/foobar2000/shared/shared.lib;$(SolutionDir)lib/atlmfc/lib/atls.lib;shlwapi.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <Version>0.97.9</Version>
+      <Version>0.97.11</Version>
       <ShowProgress>NotSet</ShowProgress>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
