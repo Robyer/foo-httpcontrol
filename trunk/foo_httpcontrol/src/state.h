@@ -123,6 +123,7 @@ namespace httpc {
 
 	extern void get_registered_extensions();
 	extern size_t is_extension_registered(const char *path); // infininte if not registered, list index elsewere
+	extern bool is_protocol_registered(const char *path);
 
 	extern void choose_srv_home_dir();
 	extern void build_restrict_to_path_list();

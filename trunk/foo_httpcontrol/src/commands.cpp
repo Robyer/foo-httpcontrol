@@ -24,8 +24,12 @@ namespace control
 				t_size l = p_items.get_count();
 
 				for (size_t i = 0; i < l; ++i)
-					if (httpc::is_extension_registered(p_items[i]->get_path()) != -1)
+				{
+					const char *item_path = p_items[i]->get_path();
+
+					if (httpc::is_extension_registered(item_path) != -1 || httpc::is_protocol_registered(item_path))
 						p_items_toadd.add_item(p_items[i]);
+				}
 
 				plm->activeplaylist_add_items(p_items_toadd, bit_array_true());
 			}
@@ -809,7 +813,7 @@ namespace control
 		list_t<const char *> files;	// files/dirs to be enqueued
 		pfc::string8 filename = param1;
 
-		if (httpc::is_extension_registered(filename) != pfc::infinite_size && param2.get_length() == 0 // adding a single file 
+		if (( httpc::is_extension_registered(filename) != pfc::infinite_size || httpc::is_protocol_registered(filename) ) && param2.get_length() == 0 // adding a single file 
 			|| strcmp(param2, "EnqueueDirSubdirs") == 0) // adding a nested directory
 			files.add_item(filename);
 		else
@@ -833,8 +837,11 @@ namespace control
 			static_api_ptr_t<playlist_incoming_item_filter_v2>()->process_locations_async(
 				files,
 				playlist_incoming_item_filter_v2::op_flag_background | playlist_incoming_item_filter_v2::op_flag_delay_ui,
-				httpc::restrict_mask,
-				"",
+				NULL,
+				NULL,
+//	removing override masks since they don't seem to be supported anyway and we're forced to manually filter resulting list
+//				httpc::restrict_mask,
+//				"",
 				core_api::get_main_window(),
 				notify
 			);

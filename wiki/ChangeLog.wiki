@@ -2,6 +2,10 @@
 
 = Changelog 2011 =
 
+v0.97.12 14 Aug
+  * add: hide password text in Preferences;
+  * fix: http protocol items left out when adding items using Browse cmd. it's now possible to "Add location" too by specifying url in Browse cmd param1;
+
 v0.97.11 20 Jul
   * fix: crash on unknown file format requests;
   * fix: inability to send zero length files;
