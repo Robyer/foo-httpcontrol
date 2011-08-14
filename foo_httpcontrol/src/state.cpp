@@ -568,6 +568,17 @@ namespace httpc {
 		return pfc::infinite_size;
 	}
 
+	bool is_protocol_registered(const char *path)
+	{
+		// hardcoding protocols since there seems to be no way of interrogating fb2k for supported protocols list
+		// protocol should be lowercase so no case insensitive comparision is required
+
+		if (strstr(path, "http://") == path)	
+			return true;
+
+		return false;
+	}
+
 	void get_registered_extensions()
 	{
 		extensions.remove_all();

@@ -94,7 +94,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalDependencies>$(SolutionDir)lib/foobar2000/shared/shared.lib;$(SolutionDir)lib/atlmfc/lib/atls.lib;shlwapi.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <Version>0.97.11</Version>
+      <Version>0.97.12</Version>
       <ShowProgress>NotSet</ShowProgress>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
