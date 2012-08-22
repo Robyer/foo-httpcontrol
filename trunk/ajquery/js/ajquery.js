@@ -582,6 +582,17 @@ function updatepreferencesdynamic()
 	togglestate('#QueueItems,#DequeueItems,#Del', selection.count);
 	togglestate('#SetFocus', selection.count == 1);
 	togglestate('#FlushQueue', fb.queueTotalTime);
+
+	togglestate('#prevpage_btn', fb.playlistPage - 1);
+	togglestate('#nextpage_btn', fb.playlistPage - Math.ceil(fb.playlistItemsCount / fb.playlistItemsPerPage));
+
+	title = fb.playlistPage != 1 ? 
+					'Page '+(fb.playlistPage - 1)+'/'+Math.ceil(fb.playlistItemsCount / fb.playlistItemsPerPage) : ''
+	$('#prevpage_btn').attr('title', title);
+
+	title = fb.playlistPage - Math.floor(fb.playlistItemsCount / fb.playlistItemsPerPage) - 1 != 0 ? 
+					'Page '+(fb.playlistPage + 1)+'/'+Math.ceil(fb.playlistItemsCount / fb.playlistItemsPerPage) : ''
+	$('#nextpage_btn').attr('title', title);
 }
 
 function updatebrowser()
@@ -1574,6 +1585,21 @@ $(function(){
 			{
 				var items = selection.tostr();
 				command($(this).attr('id'), items);
+			}
+		});
+
+		// Playlist buttons
+		$('#prevpage_btn').click(function(e){
+			if (!$(this).hasClass('ui-state-disabled')) {
+				e.preventDefault();
+				retrievestate('P', fb.playlistPage - 1);
+			}
+		});
+
+		$('#nextpage_btn').click(function(e){
+			if (!$(this).hasClass('ui-state-disabled')) {
+				e.preventDefault();
+				retrievestate('P', fb.playlistPage + 1);
 			}
 		});
 

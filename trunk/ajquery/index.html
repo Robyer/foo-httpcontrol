@@ -16,8 +16,8 @@
 			button { margin: .5em .4em .5em 0; cursor: pointer; padding: .2em .6em .3em .6em; line-height: 1.4em; }
 			.lindicator { padding: 8px; visibility: hidden; }
 
-			#pl { display: table; }
-			.pl_row { display: table-row; cursor: default; height: 18px; }
+			#pl { display: table; width: 100%; }
+			.pl_row { display: table-row; cursor: default; height: 18px;}
 			.pl_c1  { width: 15%; display: table-cell; padding: 2px; text-align: right; vertical-align: middle; }
 			.pl_c2  { width: 80%; display: table-cell; padding: 2px; vertical-align: middle; }
 			.pl_c3  { width: 5%; display: table-cell; padding: 2px; text-align: right; vertical-align: middle; }
@@ -80,8 +80,17 @@
 				<li><a href="#t"></a></li>
 			</ul>
 			<div id="t" class="ui-tabs-hide">
-				<div id="pageslider" style="margin-bottom:8px;"></div>
-				<div id="playlist"></div>
+				<div>
+					<div style="float: right; width: 8em;">
+						<ul id="buttons" class="ui-widget" style="margin-top: -1.3em; ">
+							<li style="border: 1px solid transparent;" title="" id="prevpage_btn"><span class="ui-icon ui-icon-arrowthick-1-w"></span></li>
+							<li style="border: 1px solid transparent;" title="" id="nextpage_btn"><span class="ui-icon ui-icon-arrowthick-1-e"></span></li>
+						</ul>
+					</div>
+					<div style="margin-top:0.5em; margin-right: 11em"><div id="pageslider"></div></div>
+				</div>
+
+				<div id="playlist" style="clear: both;"></div>
 				<hr style="margin-right: -1.5em; margin-left: -1.5em;">
 				<div id="summary"></div>
   	        	</div>
