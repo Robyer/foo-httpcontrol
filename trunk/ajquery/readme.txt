@@ -1,5 +1,5 @@
 Asynchronious foo_httpcontrol template
-0.68 http://code.google.com/p/foo-httpcontrol/
+0.69 http://code.google.com/p/foo-httpcontrol/
 
 *** Requirements
 
@@ -49,6 +49,15 @@ Asynchronious foo_httpcontrol template
 	want to permanently modify playlist page size.
 
 *** Release history 2012
+
+	10 Nov  0.69
+		fix:	added a bit of sanity to file browser dialog: list scroll
+		        position is remembered for each visited directory, 
+		        improved path navigation;
+		fix:	added a bit of sanity to search dialog;
+		fix:	fixed SAC & SAQ checkboxes behaviour;
+		fix:	albumart initialisation;
+		fix:	updated jquery & jquery-ui;
 
 	23 Aug  0.68
 		add:	playlist page switch buttons;
