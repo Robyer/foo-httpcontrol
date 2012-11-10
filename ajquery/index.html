@@ -3,10 +3,10 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>foobar2000</title>
-		<script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
-		<script type="text/javascript" src="js/jquery-ui-1.8.10.custom.min.js"></script>
+		<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-1.9.1.custom.min.js"></script>
 	        <script type="text/javascript" src="js/ajquery.js"></script>
-		<link type="text/css" href="css/smoothness/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
+		<link type="text/css" href="css/smoothness/jquery-ui-1.9.1.custom.css" rel="stylesheet" />
 		<link rel="shortcut Icon" href="/ajquery/img/favicon.ico" type="image/x-icon" />
 		<style type="text/css">
 			body{ font-size: 0.5em; margin: 10px; background-color: #ffffff; max-width: 600px;}
@@ -15,6 +15,8 @@
 			ul#buttons span.ui-icon {float: left; margin: 0 4px;}
 			button { margin: .5em .4em .5em 0; cursor: pointer; padding: .2em .6em .3em .6em; line-height: 1.4em; }
 			.lindicator { padding: 8px; visibility: hidden; }
+
+			.ui-progressbar .ui-progressbar-value { background: #e8e8e8; }
 
 			#pl { display: table; width: 100%; }
 			.pl_row { display: table-row; cursor: default; height: 18px;}
@@ -35,7 +37,7 @@
 
 			#playlist { margin-right: -10px; margin-left: -10px; }
 
-			.br_o { background:#f8f8f8; } /* odd file browser row */
+			.br_o { background:#f8f8f8; }	/* odd file browser row */
 			.br_g { color:#a5a5a5; }	/* inactive file browser row */
 
 			hr { border: 0; border-bottom: 1px #b0b0b0 solid; }
@@ -79,7 +81,7 @@
 			<ul>
 				<li><a href="#t"></a></li>
 			</ul>
-			<div id="t" class="ui-tabs-hide">
+			<div id="t">
 				<div>
 					<div style="float: right; width: 8em;">
 						<ul id="buttons" class="ui-widget" style="margin-top: -1.3em; ">
@@ -90,9 +92,9 @@
 					<div style="margin-top:0.5em; margin-right: 11em"><div id="pageslider"></div></div>
 				</div>
 
-				<div id="playlist" style="clear: both;"></div>
+				<div id="playlist" style="clear: both;">lol</div>
 				<hr style="margin-right: -1.5em; margin-left: -1.5em;">
-				<div id="summary"></div>
+				<div id="summary" style="margin-bottom: -0.5em"></div>
   	        	</div>
 		</div>
 	</div>
@@ -129,21 +131,30 @@
 		</div>
 
 		<div id="search_dlg" title="Search media library">
-			<p><input type="text" size="30" id="searchstr"></p>
-			<hr/>
-			<p><button id="r_btn">Query</button>&nbsp;<span id="querypath"></span></p>
 			<div id="querylist"></div>
+		</div>
+
+		<div id="search_dlg_nav1" class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" style="border-bottom-width: 1px; border-top-width: 0px; font-size: 1em; width: 100%; white-space:nowrap;">
+			<p>Search: <input type="text" size="30" id="searchstr"> <a style="padding-right: 5px;" href="http://wiki.hydrogenaudio.org/index.php?title=Foobar2000:Query_syntax" title="Query syntax help">?</a></p>
+		</div>
+
+		<div id="search_dlg_nav2" class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" style="border-bottom-width: 1px; border-top-width: 0px; font-size: 1em; width: 100%; white-space:nowrap;">
+			<button id="r_btn">Query</button>&nbsp;<span id="querypath"></span>
 		</div>
 
 		<div id="browse_dlg" title="File browser">
 			<div id="browse_table"></div>
 		</div>
 
+		<div id="browse_dlg_nav" class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" style="border-bottom-width: 1px; border-top-width: 0px; font-size: 1em; width: 100%; white-space:nowrap;">
+			<a id="browse_parent" href="#"></a>&nbsp;<span id="browse_path"></span>
+		</div>
+
 		<div id="error_dlg" title="&#9760; Ouch!">
 			<p>An AJAX error occured.</p>
 			<p>Possible reasons:</p>
 			<ul>
-				<li>JSON parser got stuck on erroneous data;</li>
+				<li>JSON parser got stuck on invalid data; response dump might be provided below so you can analyze what went wrong using JSON validator of your choice, for example: <a href="http://jsonformatter.curiousconcept.com/">http://jsonformatter.curiousconcept.com/</a>;</li>
 				<li>borken connection;</li>
 				<li>god knows what else.</li>
 			</ul>

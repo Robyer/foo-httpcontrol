@@ -1,6 +1,7 @@
 ﻿﻿﻿﻿
 var fb;	// fb2k state
 var br;	// file browser state
+var br_offsets = {}; // directory scroll offsets
 var library;
 var aa = new Object; // albumart image
 var windows_list = {}; // opened dialog windows list
@@ -9,7 +10,7 @@ var settingtabs = false; // true when mangling with playlist tabs
 var timeoutid, timeoutid2;
 var npid;
 var brparams = new Object;
-var keypressed = {}
+var keypressed = {};
 var input_has_focus = false;
 
 var mouse = {
@@ -456,7 +457,7 @@ function checkhotkeys(code)
 			$('#FocusOnPlaying').click();
 			break;
 		case 83: // s
-			if (fb.SAC)
+			if (fb.SAC === 'checked')
 				$('#SAC').removeAttr('checked').click();
 			else
 				$('#SAC').attr('checked', 'checked').click();
@@ -584,13 +585,13 @@ function updatepreferencesdynamic()
 	togglestate('#FlushQueue', fb.queueTotalTime);
 
 	togglestate('#prevpage_btn', fb.playlistPage - 1);
-	togglestate('#nextpage_btn', fb.playlistPage - Math.ceil(fb.playlistItemsCount / fb.playlistItemsPerPage));
+	togglestate('#nextpage_btn', fb.playlistPage == 1 && Math.ceil(fb.playlistItemsCount / fb.playlistItemsPerPage) == 0 ? 0 : fb.playlistPage - Math.ceil(fb.playlistItemsCount / fb.playlistItemsPerPage));
 
 	title = fb.playlistPage != 1 ? 
 					'Page '+(fb.playlistPage - 1)+'/'+Math.ceil(fb.playlistItemsCount / fb.playlistItemsPerPage) : ''
 	$('#prevpage_btn').attr('title', title);
 
-	title = fb.playlistPage - Math.floor(fb.playlistItemsCount / fb.playlistItemsPerPage) - 1 != 0 ? 
+	title = (fb.playlistPage - Math.floor(fb.playlistItemsCount / fb.playlistItemsPerPage) - 1 != 0)? 
 					'Page '+(fb.playlistPage + 1)+'/'+Math.ceil(fb.playlistItemsCount / fb.playlistItemsPerPage) : ''
 	$('#nextpage_btn').attr('title', title);
 }
@@ -601,31 +602,36 @@ function updatebrowser()
 
 	var a = [];
 	var len = br.path.length;
+
 	for (var i = 0; i < len; ++i)
 	{
 		var row = br.path[i];
-		a.push(['<a href="#" onclick="retrievebrowserstate(\'', row.cmd, '\');">', row.path, '</a>'].join(''));
+
+		a.push(['<a href="#" onclick="br_offsets[\'',br.pathcurrent,'\']=$(\'#browse_dlg\').scrollTop(); retrievebrowserstate(\'', row.cmd, '\');">', row.path.substring(0, row.path.length - 1), '</a>'].join(''));
 	}
 
-	$('#browse_dlg').dialog('option', 'title', a.join(''));
+	$('#browse_path').html(a.join(' &gt; '));
 
 	tmp = '<table class="pl"><tr><td colspan="4">';
 
 	if (br.pathcurrent != '%20')
 	{
-		tmp += '<a href="#" onclick="retrievebrowserstate(\'' + br.parent + '\');">&nbsp;..&nbsp;</a>';
 		brparams.cmdenqueue = 'Browse&param1='+br.pathcurrent+'&param2=EnqueueDir&';
 		brparams.cmdenqueuenested = 'Browse&param1='+br.pathcurrent+'&param2=EnqueueDirSubdirs&';
+
+		$('#browse_parent').text('[ .. ]');
+		$('#browse_parent').click(function() { br_offsets[br.pathcurrent]=$('#browse_dlg').scrollTop(); retrievebrowserstate(br.parent); });
 	}	
 	else
 	{
-		tmp += '&nbsp;'
 		brparams.cmdenqueue = '';
 		brparams.cmdenqueuenested = '';
+		$('#browse_parent').text('');
+		$('#browse_parent').click(function() {  } );
 	}
-	tmp += '</td></tr>'
 
 	len = br.browser.length;
+	bookmark = false;
 	for (var i = 0; i < len; ++i)
 	{
 		var row = br.browser[i];
@@ -646,7 +652,7 @@ function updatebrowser()
 			tmp += '<tr>';
 
 		if (row.pu)
-			tmp += ['<td style="width:90%"><a href="#" onclick="retrievebrowserstate(\'', row.pu, '\');">', row.p, '</a></td>'].join('');
+			tmp += ['<td style="width:90%"><a href="#" onclick="br_parent_path=\'', row.pu, '\'; br_offsets[\'',br.pathcurrent,'\']=$(\'#browse_dlg\').scrollTop(); retrievebrowserstate(\'', row.pu, '\');">', row.p, '</a></td>'].join('');
 		else
 			tmp += ['<td style="width:90%">', row.p, '</td>'].join('');
 
@@ -658,6 +664,9 @@ function updatebrowser()
 	tmp += '</table>';
 
 	$('#browse_table').html(tmp);
+
+	if (br_offsets.hasOwnProperty(br.pathcurrent))
+		$('#browse_dlg').scrollTop( br_offsets[br.pathcurrent] );
 }
 
 function switchpage(shift)
@@ -1048,8 +1057,11 @@ function updatealbumartaspect()
 	if (aa.img.width == 0 || aa.img.height == 0)
 		setTimeout('updatealbumartaspect()', 1000);
 	else
-		$('#aa_pane').resizable('destroy')
-		.resizable({alsoResize: "#aa_img",
+	{
+		if ($('#aa_pane').hasClass("ui-resizeable"))
+			$('#aa_pane').resizable('destroy');
+
+		$('#aa_pane').resizable({alsoResize: "#aa_img",
 					handles: 'all',
 					aspectRatio: aa.img.width/aa.img.height,
 					stop: function (event, ui) { 
@@ -1057,6 +1069,7 @@ function updatealbumartaspect()
 						save_div_position_to_cookie('aa_pane');
 					}
   		});
+	}
 }
 
 function updatealbumart()
@@ -1105,7 +1118,7 @@ function updateui()
 		else
 			$("#playingtitle").html('&nbsp;');
 
-		if (fb.SAC)
+		if (fb.SAC === 'checked')
 			$('#progressbar').addClass('ui-state-error');
 		else
 			$('#progressbar').removeClass('ui-state-error');
@@ -1118,8 +1131,8 @@ function updateui()
 		else
 			$('#mute').removeClass('ui-state-error').attr('title', 'Mute');
 
-		$("#SAC").attr('checked', fb.SAC);
-		$("#SAQ").attr('checked', fb.SAQ);
+		$("#SAC").attr('checked', fb.SAC === "checked");
+		$("#SAQ").attr('checked', fb.SAQ === "checked");
 		$("#PBO").attr('selectedIndex', fb.playbackOrder);
 
 		if (!drag.dragging)
@@ -1364,6 +1377,9 @@ $(function(){
 			}
 		});
 
+		$('#search_dlg_nav1').insertBefore('#search_dlg');
+		$('#search_dlg_nav2').insertBefore('#search_dlg');
+
 		$('#searchstr').keypress(function(e) {
 			if (e.which == 13)
 				searchmedialibrary($('#searchstr').attr('value'));
@@ -1412,6 +1428,7 @@ $(function(){
 		    	},
 			close: function(event, ui) { 
 				save_window_to_cookie($(this).attr('id'), false);
+				br_offsets = {};
 			},
 			dragStop: function(event, ui) {
 				save_dialog_position_to_cookie($(this).attr('id'), ui)
@@ -1421,6 +1438,8 @@ $(function(){
 				return true;
 			}
 		});
+
+		$("#browse_dlg_nav").insertBefore("#browse_dlg");
 
 		// error dialog
 		$('#error_dlg').dialog({
