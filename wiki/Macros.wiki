@@ -1,0 +1,58 @@
+#summary foo_httpcontrol supported macros
+
+<wiki:toc max_depth="2" />
+= Notes =
+The following macros are automatically substituted in template files, either default foo_httpcontrol_controls_tpl.html, or specified by user via param3 parameter.
+= Supported macros =
+== {{{[HELPER1]}}} ==
+== {{{[HELPER2]}}} ==
+== {{{[HELPER3]}}} ==
+== {{{[HELPER1X]}}} ==
+== {{{[HELPER2X]}}} ==
+== {{{[HELPER3X]}}} ==
+== {{{[VOLUME]}}} ==
+== {{{[VOLUME_DB]}}} ==
+== {{{[VOLUME_OPTION]}}} ==
+== {{{[PLAYBACK_ORDER]}}} ==
+== {{{[PLAYBACK_ORDER_OPTION]}}} ==
+== {{{[PLAYLISTS_OPTION]}}} ==
+== {{{[SAC]}}} ==
+== {{{[SAQ]}}} ==
+== {{{[ITEM_PLAYING_POS]}}} ==
+== {{{[ITEM_PLAYING_LEN]}}} ==
+== {{{[QUEUE_TOTAL_TIME]}}} ==
+== {{{[IS_PLAYING]}}} ==
+== {{{[IS_PAUSED]}}} ==
+== {{{[IS_ENQUEUEING]}}} ==
+== {{{[AUTO_REFRESH]}}} ==
+== {{{[LAST_ACTION]}}} ==
+== {{{[ALBUMART]}}} ==
+== {{{[PLAYLIST]}}} ==
+== {{{[PLAYLIST_TOTAL_TIME]}}} ==
+== {{{[PLAYLIST_ACTIVE]}}} ==
+== {{{[PLAYLIST_PLAYING]}}} ==
+== {{{[PLAYLIST_PAGE]}}} ==
+== {{{[PLAYLIST_PAGES_COUNT]}}} ==
+== {{{[PLAYLIST_PAGES]}}} ==
+== {{{[PLAYLIST_PAGES_SELECT]}}} ==
+== {{{[PLAYLIST_ITEM_FOCUSED]}}} ==
+== {{{[PLAYLIST_ITEM_PLAYING]}}} ==
+== {{{[PLAYLIST_ITEM_PREV_PLAYED]}}} ==
+== {{{[PLAYLIST_ITEMS_COUNT]}}} ==
+== {{{[PLAYLIST_ITEMS_PER_PAGE]}}} ==
+== {{{[PLAYLIST_PLAYING_ITEMS_COUNT]}}} ==
+== {{{[PLAYLIST_IS_UNDO_AVAILABLE] }}} ==
+== {{{[PLAYLIST_IS_REDO_AVAILABLE] }}} ==
+== {{{[PLAYLIST_JS]}}} ==
+== {{{[PLAYLISTS_JS]}}} ==
+== {{{[SEARCH_REQUEST]}}} ==
+== {{{[QUERY]}}} ==
+== {{{[QUERY_JS]}}} ==
+== {{{[QUERY_INFO]}}} ==
+== {{{[QUERY_INFO_JS]}}} ==
+== {{{[PATH]}}} ==
+== {{{[PATH_JS]}}} ==
+== {{{[PATH_PARENT]}}} ==
+== {{{[BROWSER]}}} ==
+== {{{[BROWSER_JS]}}} ==
+== {{{[STATE_CHANGE]}}} ==

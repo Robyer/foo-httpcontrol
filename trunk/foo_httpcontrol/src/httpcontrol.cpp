@@ -3,7 +3,7 @@
 
 DECLARE_COMPONENT_VERSION(
 	"HTTP Control",
-	"0.97.12",
+	"0.97.13",
 	"control foobar2000 via http "__DATE__)
 	
 VALIDATE_COMPONENT_FILENAME("foo_httpcontrol.dll");
