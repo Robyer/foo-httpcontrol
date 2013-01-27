@@ -11,7 +11,7 @@
 </style>	
 </head>
 <body>
-<h2>foo_httpcontrol 0.97.12 14 Aug 2011</h2>
+<h2>foo_httpcontrol 0.97.13 27 Jan 2013</h2>
 <p><a href="http://code.google.com/p/foo-httpcontrol/">http://code.google.com/p/foo-httpcontrol</a></p>
 
 <h2 id="warn">Warning/disclaimer: this software comes without any warranties at all. It is still in the very early development stage, and so on, and so forth, blah-blah-blah.
@@ -72,6 +72,12 @@ Don't forget to press Apply or your changes won't have any effect until fb2k is 
 
 <p>Discussion thread (please post all your questions and  suggestions  here):
 <a href="http://www.hydrogenaudio.org/forums/index.php?showtopic=62218">http://www.hydrogenaudio.org/forums/index.php?showtopic=62218</a></p>
+
+<h2>Changes history 2013</h2> 
+<ul>
+<li>add: Sort command renamed to SortAscending, old name still supported;</li>
+<li>add: SortDescending command, essentially the same as SortAscending but sorting result is reversed;</li>
+</ul>
 
 <h2>Changes history 2011</h2> 
 
@@ -476,8 +482,15 @@ example: ?cmd=PlayingCommand&amp;param1=Playback%20Statistics%2FRating%2F3</li>
 	don't forget to urlencode param1 value.<br/>
 </li>
 
-<li>Sorts active playlist or its specified items using sort pattern<br/>
-	cmd=Sort<br/>
+<li>Sorts whole active playlist or its specified items using sort pattern in ascending order<br/>
+	cmd=SortAscending (deprecated old name Sort)<br/>
+	param1=sort pattern<br/>
+	param2=numbers separated by any delimeter (optional)<br/>
+	don't forget to urlencode param1 value.<br/>
+</li>
+
+<li>Sorts whole active playlist or its specified items using sort pattern in descending order<br/>
+	cmd=SortDescending<br/>
 	param1=sort pattern<br/>
 	param2=numbers separated by any delimeter (optional)<br/>
 	don't forget to urlencode param1 value.<br/>

@@ -920,36 +920,82 @@ namespace control
 		return true;
 	}
 
-	bool cmd_sort(foo_httpserver_command *cmd)
+	bool cmd_sort_ascending(foo_httpserver_command *cmd)
 	{
-		bool sort_selection_only;
 		static_api_ptr_t<playlist_manager> plm;
 		pfc::string8 param1 = cmd->get_param(0);
 		pfc::string8 param2 = cmd->get_param(1);
 
-		if (param1.get_length() == 0) // no sort pattern specified, ABORT ABORT ABORT
+		if (param1.get_length() == 0) // no sort pattern specified
 			return false;
 
+		// create an undo point
 		plm->activeplaylist_undo_backup();
 
 		if (param2.get_length()) 
 		{
-			// sorting selection
+			// select active playlist individual items
 			bit_array_bittable items(0);
 			str_to_bitarray(param2, items);
 
 			plm->activeplaylist_set_selection(bit_array_true(), bit_array_false());
 			plm->activeplaylist_set_selection(items, bit_array_true());
-
-			sort_selection_only = true;
 		}
 		else
 		{
-			// sorting whole activeplaylist
-			sort_selection_only = false;
+			// select whole active playlist
+			plm->activeplaylist_set_selection(bit_array_true(), bit_array_true());
 		}
 
-		return plm->activeplaylist_sort_by_format(param1.toString(), sort_selection_only);
+		return plm->activeplaylist_sort_by_format(param1.toString(), true);
+	}
+
+	bool cmd_sort_descending(foo_httpserver_command *cmd)
+	{
+		// sorting
+		if (!cmd_sort_ascending(cmd))
+			return false;
+		
+		// reversing sort result
+		static_api_ptr_t<playlist_manager> plm;
+		t_size count, selection_count;
+		pfc::array_t<t_size> order; 
+
+		count = plm->activeplaylist_get_item_count();
+
+		bit_array_bittable table(count);
+		order.set_size(count);
+		selection_count = plm->activeplaylist_get_selection_count(plm->activeplaylist_get_item_count());
+
+		plm->activeplaylist_get_selection_mask(table);
+
+		if (count == selection_count)
+		{
+			// whole playlist is selected
+			// create a simple reverse order
+			for(t_size walk = 0, walk_reverse = count - 1; walk < count; ++walk, --walk_reverse) {
+				order[walk_reverse] = walk;
+			}
+		} else {
+			// individual playlist items are selected
+			pfc::array_t<t_size> selection; 
+			selection.set_size(selection_count);
+
+			// create straight order, and fill selection indexes array
+			for(t_size walk = 0, s = 0; walk < count; ++walk) {
+				order[walk] = walk;
+				if (table[walk])
+					selection[s++] = walk;
+			}
+
+			// modify order with reversed selection indexes array
+			for(t_size walk = 0, s = selection_count-1; walk < count; ++walk) {
+				if (table[walk])
+					order[walk] = selection[s--];
+			}
+		}
+
+		return plm->activeplaylist_reorder_items(order.get_ptr(), count);
 	}
 
 	bool cmd_focusonplaying(foo_httpserver_command *cmd)
@@ -1075,7 +1121,9 @@ namespace control
 		commands["PlaybackOrder"] = &cmd_playbackorder;
 		commands["PlaylistItemsPerPage"] = &cmd_playlistitemsperpage;
 		commands["SetSelection"] = &cmd_setselection;
-		commands["Sort"] = &cmd_sort;
+		commands["SortAscending"] = &cmd_sort_ascending;
+		commands["SortDescending"] = &cmd_sort_descending;
+		commands["Sort"] = &cmd_sort_ascending; // deprecated
 		commands["FormatTitles"] = &cmd_formattitles;
 	}
 
