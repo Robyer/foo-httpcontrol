@@ -184,8 +184,17 @@ Executes context menu command specified in param1 for currently selected (or spe
  * param2=item indexes separated by any delimeter (optional)
 
 === `Sort` ===
+Deprecated, old name of SortAscending.
 
-Sorts active playlist or its specified items using sort pattern.
+=== `SortAscending` ===
+
+Sorts whole active playlist or its specified items using sort pattern in ascending order.
+ * param1=sort pattern
+ * param2=item indexes separated by any delimeter (optional)
+
+=== `SortDescending` ===
+
+Sorts whole active playlist or its specified items using sort pattern in descending order.
  * param1=sort pattern
  * param2=item indexes separated by any delimeter (optional)
 

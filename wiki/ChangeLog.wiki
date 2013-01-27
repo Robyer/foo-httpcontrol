@@ -1,5 +1,11 @@
 #summary foo_httpcontrol changelog
 
+= Changelog 2013 =
+
+v0.97.13 27 Jan
+  * add: Sort command renamed to SortAscending, old name still supported;
+  * add: SortDescending command, essentially the same as SortAscending but sorting result is reversed;
+
 = Changelog 2011 =
 
 v0.97.12 14 Aug
