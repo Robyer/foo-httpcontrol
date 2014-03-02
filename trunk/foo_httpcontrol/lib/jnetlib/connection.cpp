@@ -37,7 +37,7 @@ JNL_Connection::JNL_Connection(JNL_AsyncDNS *dns, int sendbufsize, int recvbufsi
   m_send_len=m_send_pos=0;
   m_host[0]=0;
   m_saddr = new struct sockaddr_in;
-  memset(m_saddr,0,sizeof(m_saddr));
+  memset(m_saddr,0,sizeof(sockaddr_in));
 }
 
 void JNL_Connection::connect(int s, struct sockaddr_in *loc)
@@ -51,7 +51,7 @@ void JNL_Connection::connect(int s, struct sockaddr_in *loc)
 	if (loc) 
 		*m_saddr=*loc;
 	else 
-		memset(m_saddr,0,sizeof(m_saddr));
+		memset(m_saddr,0,sizeof(sockaddr_in));
   
 	if (m_socket != INVALID_SOCKET)
 	{
@@ -80,7 +80,7 @@ void JNL_Connection::connect(char *hostname, int port)
     SET_SOCK_BLOCK(m_socket,0);
     strncpy_s(m_host,hostname,sizeof(m_host)-1); // strncpy
     m_host[sizeof(m_host)-1]=0;
-    memset(m_saddr,0,sizeof(m_saddr));
+    memset(m_saddr,0,sizeof(sockaddr_in));
     if (!m_host[0])
     {
       m_errorstr="empty hostname";
@@ -356,7 +356,7 @@ void JNL_Connection::close(int quick)
     m_recv_len=m_recv_pos=0;
     m_send_len=m_send_pos=0;
     m_host[0]=0;
-    memset(m_saddr,0,sizeof(m_saddr));
+    memset(m_saddr,0,sizeof(sockaddr_in));
   }
   else
   {

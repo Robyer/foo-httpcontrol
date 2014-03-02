@@ -655,9 +655,12 @@ namespace ui
 			for (t_size i = 0; i < l; ++i)
 				if (browser.entries[i].type != foo_browsefiles::ET_DIR)
 				{
-					if (! (cfg.main.hide_nonplayables && httpc::is_extension_registered(browser.entries[i].path) == pfc::infinite_size)
+					const char *path = browser.entries[i].path;
+					
+					if (! (cfg.main.hide_nonplayables && httpc::is_extension_registered(path) == pfc::infinite_size)
 						|| !cfg.main.hide_nonplayables
-						|| (browser.entries[i].path.get_length() >= 2 && (browser.entries[i].path[0] == '\\' || browser.entries[i].path[0] == 'N' && browser.entries[i].path[1] == 'e')) )
+						|| (strlen(path) >= 3 
+							&& (strstr(path, "\\\\") == path || strstr(path, "Net") == path)) )
 					{
 						browser_format_row(count++, browser.entries[i], row);
 						result_ref << row;
@@ -706,9 +709,12 @@ namespace ui
 			for (t_size i = 0; i < l; ++i)
 				if (browser.entries[i].type != foo_browsefiles::ET_DIR)
 				{
-					if (! (cfg.main.hide_nonplayables && httpc::is_extension_registered(browser.entries[i].path) == pfc::infinite_size)
+					const char *path = browser.entries[i].path;
+
+					if (! (cfg.main.hide_nonplayables && httpc::is_extension_registered(path) == pfc::infinite_size)
 						|| !cfg.main.hide_nonplayables
-						|| (browser.entries[i].path.get_length() >= 2 && (browser.entries[i].path[0] == '\\' || browser.entries[i].path[0] == 'N' && browser.entries[i].path[1] == 'e')) )
+						|| (strlen(path) >= 3 
+							&& (strstr(path, "\\\\") == path || strstr(path, "Net") == path)) )
 					{
 						if (count != 0)
 							result_ref << ",";
@@ -884,7 +890,7 @@ namespace ui
 
 		pfc::stringcvt::string_wide_from_utf8 path_w(path);
 
-		inFile = CreateFileW(path_w, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL || FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+		inFile = CreateFileW(path_w, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 
 		buffer.reset();
 

@@ -159,7 +159,7 @@ namespace facets
 		for (iter = items.first(); iter.is_valid(); ++iter)
 			filtered.add_item(xml_friendly_string(pfc::string8(iter->m_key)));
 
-		filtered.sort_t(sortfunc_string8);
+		filtered.sort_t(sortfunc_natural);
 
 		script_query.release();
 

@@ -322,7 +322,7 @@ bool foo_browsefiles::browse(pfc::string8 path)
 				entry.filename.remove_chars(0, entry.filename.find_last('\\') + 1);
 
 				// format entry size
-				entry.size = (findFileData->nFileSizeHigh << 8) | findFileData->nFileSizeLow;
+				entry.size = ((t_uint64)findFileData->nFileSizeHigh << 8) | findFileData->nFileSizeLow;
 				if (entry.type == ET_FILE)
 					entry.size_str << format_size((DWORD)entry.size);
 
@@ -333,7 +333,7 @@ bool foo_browsefiles::browse(pfc::string8 path)
 			} while (FindNextFileW(hFind, findFileData) != NULL);
 		FindClose(hFind);
 		delete findFileData;
-		entries.sort_t(sortfunc);
+		entries.sort_t(sortfunc_natural);
 
 	}
 	else if (e_t == ET_NETWORK

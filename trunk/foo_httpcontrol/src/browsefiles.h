@@ -51,7 +51,9 @@ public:
 	};
 
 private:
-	static int sortfunc(entry_data & p1, entry_data & p2) {return stricmp_utf8(p1.path.operator const char *(),p2.path.operator const char *());}
+/*	static int sortfunc(entry_data & p1, entry_data & p2) {return stricmp_utf8(p1.path.operator const char *(),p2.path.operator const char *());}*/
+	static int sortfunc_natural(entry_data & p1, entry_data & p2) {	return compare_natural_utf8(p1.path, p2.path); }
+
 	ENTRY_TYPE get_path_type(char *);
 	void scan_network(ENTRY_TYPE searchfor, char *path, NETRESOURCE *pNr);
 public:

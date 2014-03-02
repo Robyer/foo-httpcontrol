@@ -115,7 +115,7 @@ public:
 
 	pfc::string_simple get_content_type(pfc::string_base &request, bool &compressible)
 	{
-		char *extension = NULL;
+		const char *extension = NULL;
 		t_size l = request.get_length();
 		int shift = pfc::infinite_size;
 
@@ -129,15 +129,13 @@ public:
 			}
 
 		if (shift != pfc::infinite_size && (shift + 1) != l)
-			extension = const_cast<char *>(request.toString()) + shift + 1;
+			extension = request.get_ptr() + shift + 1;
 
 		if (extension != NULL)
 		{
-//			pfc::string_simple ext = extension;
-
 			if (m_mimeTypes.have_item(extension))
 			{
-				compressible = m_compressibleTypes[extension];
+				compressible = m_compressibleTypes.have_item(extension);
 				return m_mimeTypes[extension];
 			}
 		}

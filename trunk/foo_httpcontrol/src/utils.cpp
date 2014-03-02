@@ -114,7 +114,7 @@ pfc::string8 trim(pfc::string8 &str)
 
 	i = out.length() - 1;
 
-	while (i >= 0 && out[i] == ' ')
+	while (i > 0 && out[i] == ' ')
 		--i;
 
 	if (i < out.length())
@@ -299,4 +299,26 @@ void read_ini_key(const char *key, pfc::string_base &value, const wchar_t *path)
 
 	if (bytesread > 0)
 		value = trim(pfc::string8(pfc::stringcvt::string_utf8_from_wide(buf)));
+}
+
+/* foobar2000 SDK / metadb_handle_list.cpp / wchar_t * makeSortString(const char * in) */
+wchar_t * utf8_to_wide(const char * in)
+{
+	wchar_t * out = new wchar_t[pfc::stringcvt::estimate_utf8_to_wide(in) + 1];
+	out[0] = ' ';//StrCmpLogicalW bug workaround.
+	pfc::stringcvt::convert_utf8_to_wide_unchecked(out + 1, in);
+    return out;
+}
+
+int compare_natural_utf8(const char *p1, const char *p2)
+{
+	wchar_t *wp1 = utf8_to_wide(p1);
+	wchar_t *wp2 = utf8_to_wide(p2);
+
+	int result = StrCmpLogicalW(wp1, wp2);
+
+	delete[] wp1;
+	delete[] wp2;
+
+	return result;
 }

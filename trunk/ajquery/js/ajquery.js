@@ -620,6 +620,7 @@ function updatebrowser()
 		brparams.cmdenqueuenested = 'Browse&param1='+br.pathcurrent+'&param2=EnqueueDirSubdirs&';
 
 		$('#browse_parent').text('[ .. ]');
+		$('#browse_parent').off('click');
 		$('#browse_parent').click(function() { br_offsets[br.pathcurrent]=$('#browse_dlg').scrollTop(); retrievebrowserstate(br.parent); });
 	}	
 	else
@@ -627,6 +628,7 @@ function updatebrowser()
 		brparams.cmdenqueue = '';
 		brparams.cmdenqueuenested = '';
 		$('#browse_parent').text('');
+		$('#browse_parent').off('click');
 		$('#browse_parent').click(function() {  } );
 	}
 
@@ -898,10 +900,12 @@ function updateplaylist()
 			$('#i'+k).addClass('pl_selected');
 	});
 
+	$("#pl span[id*='n']").off('click');
 	$("#pl span[id*='n']").click(function() {
 			select_album(getnumfromid($(this).attr('id')));
 		});
 
+	$("#pl div[id*='i']").off('dblclick').off('click');
 	$("#pl div[id*='i']").dblclick(function() {
 			$("#pl div[id*='i']").removeClass('pl_selected');
 			command('Start', getnumfromid($(this).attr('id')));
@@ -1094,7 +1098,7 @@ function updatelibrary()
 	$('#querylist').html(a.join(''));
 
 	$('#querylist div').hover(function() { $(this).addClass('qr_selected'); }, function() { $(this).removeClass('qr_selected'); })
-				.click(function() { retrievelibrarystate('QueryAdvance', ($(this).text())); });
+				.off('click').click(function() { retrievelibrarystate('QueryAdvance', ($(this).text())); });
 
 	if (library.queryInfo.length < 1)
 		$('#r_btn').html('Query');
@@ -1133,7 +1137,7 @@ function updateui()
 
 		$("#SAC").attr('checked', fb.SAC === "checked");
 		$("#SAQ").attr('checked', fb.SAQ === "checked");
-		$("#PBO").attr('selectedIndex', fb.playbackOrder);
+		$("select#PBO").val(fb.playbackOrder);
 
 		if (!drag.dragging)
 		{

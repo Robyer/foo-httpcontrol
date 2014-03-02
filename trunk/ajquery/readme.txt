@@ -48,6 +48,13 @@ Asynchronious foo_httpcontrol template
 	file. For example, playlist_items_per_page variable is useful when you
 	want to permanently modify playlist page size.
 
+*** Release history 2014
+
+	02 Mar  0.70
+		fix:	Wrong handling of parent button in file browser;
+		fix:	Playback order drop down-box didn't reflect the actual order;
+
+
 *** Release history 2012
 
 	10 Nov  0.69
