@@ -151,7 +151,7 @@ size_t foo_httpserv::send_file(pfc::string_base &filepath)
 	HANDLE inFile;
 
 	pfc::stringcvt::string_wide_from_utf8 path_w(filepath);
-	inFile = CreateFileW(path_w, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL || FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+	inFile = CreateFileW(path_w, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 
 	if (inFile == INVALID_HANDLE_VALUE) 
 		return SEND_IO_ERROR;
@@ -189,7 +189,7 @@ size_t foo_httpserv::send_file_zlib(pfc::string_base &filepath)
 	HANDLE inFile;
 
 	pfc::stringcvt::string_wide_from_utf8 path_w(filepath);
-	inFile = CreateFileW(path_w, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL || FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+	inFile = CreateFileW(path_w, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 
 	if (inFile == INVALID_HANDLE_VALUE) 
 		return SEND_IO_ERROR;

@@ -14,7 +14,7 @@ JNL_Listen::JNL_Listen(short port, unsigned long which_interface)
 {
 	m_port=port;
 	m_socket = ::socket(AF_INET, SOCK_STREAM,	IPPROTO_TCP);
-	if (m_socket < 0) 
+	if (m_socket == INVALID_SOCKET) 
 	{
 	}
 	else
@@ -47,7 +47,7 @@ JNL_Listen::JNL_Listen(short port, unsigned long which_interface)
 
 JNL_Listen::~JNL_Listen()
 {
-  if (m_socket>=0)
+  if (m_socket != INVALID_SOCKET)
   {
     closesocket(m_socket);
   }
@@ -55,7 +55,7 @@ JNL_Listen::~JNL_Listen()
 
 JNL_Connection *JNL_Listen::get_connect(int sendbufsize, int recvbufsize)
 {
-	if (m_socket < 0)
+	if (m_socket == INVALID_SOCKET)
 	{
 		return NULL;
 	}

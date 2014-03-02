@@ -13,18 +13,6 @@ namespace httpc
 {
 namespace control
 {
-	extern ATOM	g_class_atom;
-	extern HANDLE	m_io_thread;
-	extern HWND	m_hwnd;
-	extern HANDLE listener_stop_event;
-	extern HANDLE listener_init_event;
-	extern HANDLE process_command_event;
-	extern volatile bool listener_started;
-	extern volatile bool listener_error;
-	extern volatile bool listener_stop;
-	extern volatile int running_threads;
-	extern pfc::string8 listener_info;
-
 	extern commands_map commands;
 
 	extern void gen_cmd_table();
@@ -35,7 +23,6 @@ namespace control
 	static unsigned long WINAPI read_command_thread(LPVOID param);
     static unsigned long WINAPI http_listener(LPVOID param);
 	static LRESULT CALLBACK wndproc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
 }
 }
 

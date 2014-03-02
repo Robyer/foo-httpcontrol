@@ -29,6 +29,10 @@ pfc::string8 string8_safe(const char *p_string);
 
 void read_ini_key(const char *key, pfc::string_base &value, const wchar_t *path);
 
+wchar_t * utf8_to_wide(const char * in);
+
+int compare_natural_utf8(const char *p1, const char *p2);
+
 #endif /*__FOO_UTILS_H__*/
 
 

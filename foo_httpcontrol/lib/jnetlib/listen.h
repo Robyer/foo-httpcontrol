@@ -29,7 +29,7 @@ class JNL_Listen
     virtual ~JNL_Listen();
     virtual JNL_Connection *get_connect(int sendbufsize=8192, int recvbufsize=8192);
     short port(void) { return m_port; }
-    int is_error(void) { return (m_socket<0); }
+    bool is_error(void) { return m_socket == INVALID_SOCKET; }
 	
     SOCKET m_socket; // int m_socket
   protected:

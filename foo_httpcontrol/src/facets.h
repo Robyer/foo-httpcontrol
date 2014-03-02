@@ -14,7 +14,11 @@ namespace facets
 	extern pfc::list_t<string8> filtered;
 	extern string8 selected[facets_total];
 
-	static int sortfunc_string8(string8 &p1, string8 &p2) {return stricmp_utf8(p1.operator const char *(),p2.operator const char *());}
+/*	static int sortfunc_basic(string8 &p1, string8 &p2) {
+		return stricmp_utf8(p1.operator const char *(),p2.operator const char *());
+	}*/	
+
+	static int sortfunc_natural(string8 &p1, string8 &p2) {	return compare_natural_utf8(p1, p2); }
 
 	extern void filter(t_size which_facet);
 	extern void fill_playlist();

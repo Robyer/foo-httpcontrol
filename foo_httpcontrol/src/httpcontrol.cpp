@@ -3,7 +3,7 @@
 
 DECLARE_COMPONENT_VERSION(
 	"HTTP Control",
-	"0.97.13",
+	"0.97.14",
 	"control foobar2000 via http "__DATE__)
 	
 VALIDATE_COMPONENT_FILENAME("foo_httpcontrol.dll");
@@ -13,6 +13,8 @@ namespace httpc
 namespace control 
 {
 	ATOM g_class_atom;
+	pfc::string8 class_name;
+	pfc::stringcvt::string_os_from_utf8 os_class_name;
 	HANDLE	m_io_thread;
 	HWND	m_hwnd;
 	HANDLE	listener_stop_event;
@@ -51,13 +53,14 @@ namespace control
 			wc.style = 0;
 			wc.lpfnWndProc = wndproc;
 			wc.hInstance = core_api::get_my_instance();
-			pfc::stringcvt::string_os_from_utf8 os_class_name(pfc::string8("CLS_foo_httpcontrol_") << pfc::format_hex((t_uint64)GetTickCount()));
+			class_name = pfc::string8(foo_name) << pfc::string8("_class_") << pfc::format_hex((t_uint64)GetTickCount());
+			os_class_name = pfc::stringcvt::string_os_from_utf8(class_name);
 			wc.lpszClassName = os_class_name;
 			g_class_atom = RegisterClass(&wc);
 
 			m_hwnd = uCreateWindowEx(0,
-									(const char *)g_class_atom,
-									"foo_httpcontrol",
+									class_name,
+									foo_name,
 									0,
 									CW_USEDEFAULT,
 									CW_USEDEFAULT,
@@ -98,7 +101,7 @@ namespace control
 			}
 
 			if (g_class_atom)
-				UnregisterClass((LPCTSTR)g_class_atom, core_api::get_my_instance());
+				UnregisterClassW(os_class_name, core_api::get_my_instance());
 		}
 	}
 
@@ -262,7 +265,7 @@ namespace control
 				if (should_update_playlist 
 					|| config_changed
 					|| httpc::pb_item == pfc::infinite_size
-					|| httpc::active_playlist == httpc::pb_playlist	&& httpc::playlist_page_switched)
+					|| (httpc::active_playlist == httpc::pb_playlist && httpc::playlist_page_switched))
 				{
 					httpc::refresh_playing_info();
 					httpc::refresh_playlist_view();
