@@ -1,5 +1,12 @@
 #summary foo_httpcontrol changelog
 
+= Changelog 2014 =
+v.v0.97.14 02 Mar
+
+  * add: Implemented natural sorting (StrCmpLogicalW) in file browser and media library query;
+  * fix: A few fixes discovered by awesome CppCat static analyzer software;
+  * fix: (Probably) got rid of not very rare exception happening in file browser;
+
 = Changelog 2013 =
 
 v0.97.13 27 Jan
