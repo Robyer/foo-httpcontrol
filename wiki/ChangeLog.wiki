@@ -1,6 +1,13 @@
 #summary foo_httpcontrol changelog
 
 = Changelog 2014 =
+
+v.v0.97.15 02 Mar
+
+  * add: Seek command renamed to SeekPercent, old name still works;
+  * add: SeekDelta command renamed to SeekSecondDelta, old name still works;
+  * add: SeekSecond command, seek with a second precision;
+
 v.v0.97.14 02 Mar
 
   * add: Implemented natural sorting (StrCmpLogicalW) in file browser and media library query;
