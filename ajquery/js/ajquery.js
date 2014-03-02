@@ -12,6 +12,7 @@ var npid;
 var brparams = new Object;
 var keypressed = {};
 var input_has_focus = false;
+var refresh_interval = 1000; // ms,.data retrieval interval, (not supposed to be changed)
 
 var mouse = {
 	x: 0,
@@ -457,10 +458,7 @@ function checkhotkeys(code)
 			$('#FocusOnPlaying').click();
 			break;
 		case 83: // s
-			if (fb.SAC === 'checked')
-				$('#SAC').removeAttr('checked').click();
-			else
-				$('#SAC').attr('checked', 'checked').click();
+			$('#SAC').click();
 			break;
 		case 34: // PageUp
 		case 33: // PageDown
@@ -986,7 +984,8 @@ function updatenp()
 
 	if (len > 0)
 	{
-		$("#progressbar").progressbar('enable').progressbar('value', Math.floor(100 * pos / len));
+		$("#progressbar").progressbar('enable').progressbar('option', 'max', len); // % 10 second resolution
+		$("#progressbar").progressbar('value', pos);
 
 		if (pos < len)
 		{
@@ -994,7 +993,7 @@ function updatenp()
 			$("#playingtime").html("-" + format_time(len-pos));
 
 			if (fb.isPlaying == "1") 
-				npid = setTimeout('updatenp()', 1000);
+				npid = setTimeout('updatenp()', refresh_interval);
 		}
 	}
 	else
@@ -1014,14 +1013,14 @@ function updatenp()
 			retrievestate_schedule(1100, "RefreshPlayingInfo");
 		}
 		else
-			npid = setTimeout('updatenp()', 1000);
+			npid = setTimeout('updatenp()', refresh_interval);
 	}
 
 }
 
 function updatetabs()
 {
-	var tc = parseInt($("#tabs").tabs('length'));
+	var tc = parseInt($("#tabs >ul >li").size());
 	var fp = parseInt(fb.playlists.length);
         var tabs = $('#tabs');
 
@@ -1029,11 +1028,21 @@ function updatetabs()
 
 	if (tc < fp)
 		for(var i = 0; i < fp - tc; ++i)
-			tabs.tabs('add', '#t', '');
+		{
+			$( "<li><a href='#t'></a></li>" )
+				.appendTo( "#tabs .ui-tabs-nav" );
+			$( "#tabs" ).tabs('refresh');
+		}
 
 	if (tc > fp)
 		for(var i = 0; i < tc - fp; ++i)
-			tabs.tabs('remove', fp-1);
+		{
+			var tab = $( "#tabs" ).find( ".ui-tabs-nav li:eq("+(i+1)+")" ).remove();
+			var panelId = tab.attr( "aria-controls" );
+			$( "#" + panelId ).remove();
+			$( "#tabs" ).tabs('refresh');
+		}
+
 
 	for (var i = 0; i < fp; ++i)
 		if (fb.playlistPlaying == i)
@@ -1051,7 +1060,9 @@ function updatetabs()
 			$("#tabs a:eq("+i+")").html(['<span>', fb.playlists[i].name, '</span>'].join(''));
 
 
-	tabs.tabs('select', parseInt(fb.playlistActive));
+//	tabs.tabs('select', parseInt(fb.playlistActive));
+//	var index = $('#tabs a[href="#simple-tab-2"]').parent().index();
+	$("#tabs").tabs("option", "active", parseInt(fb.playlistActive));
 
 	settingtabs = false;
 }
@@ -1059,7 +1070,7 @@ function updatetabs()
 function updatealbumartaspect()
 {
 	if (aa.img.width == 0 || aa.img.height == 0)
-		setTimeout('updatealbumartaspect()', 1000);
+		setTimeout('updatealbumartaspect()', refresh_interval);
 	else
 	{
 		if ($('#aa_pane').hasClass("ui-resizeable"))
@@ -1135,8 +1146,8 @@ function updateui()
 		else
 			$('#mute').removeClass('ui-state-error').attr('title', 'Mute');
 
-		$("#SAC").attr('checked', fb.SAC === "checked");
-		$("#SAQ").attr('checked', fb.SAQ === "checked");
+		$("#SAC").prop('checked', fb.SAC === "checked");
+		$("#SAQ").prop('checked', fb.SAQ === "checked");
 		$("select#PBO").val(fb.playbackOrder);
 
 		if (!drag.dragging)
@@ -1211,7 +1222,7 @@ function retrievestate(cmd,p1)
 	  	fb = data;	
 
 	  	if (fb.isPlaying == '1' && fb.helper1 == '' || fb.isEnqueueing == '1')
-	  	    retrievestate_schedule(1000);
+	  	    retrievestate_schedule(refresh_interval);
 	  	else
 	  	{
 			fb.playingItem = parseInt(fb.playingItem);
@@ -1295,8 +1306,8 @@ $(function(){
 		
 		$('#tabs').tabs({
 			selected: -1,
-			select: function(event,ui) { 
-				if (!settingtabs) retrievestate('SwitchPlaylist', ui.index);
+			activate: function(event, ui) { 
+				if (!settingtabs) retrievestate('SwitchPlaylist', $("#tabs").tabs('option','active'));
 			}
 		});
 
@@ -1338,27 +1349,21 @@ $(function(){
 		});
 
 		$('#SAC').click(function(e){
-			if ($(this).attr('checked'))
+			if ($(this).prop('checked'))
 				command('SAC', '1');
 			else
 				command('SAC', '0');
 		});
 
 		$('#SAQ').click(function(e){
-			if ($(this).attr('checked'))
-			{
+			if ($(this).prop('checked'))
 				command('SAQ', '1');
-				$('#SAQ').attr('checked', 'checked');
-			}
 			else
-			{
 				command('SAQ', '0');
-				$('#SAQ').removeAttr('checked');
-			}
 		});
 
 		$('#PBO').change(function(e){
-			command('PlaybackOrder', $(this).attr('selectedIndex'));
+			command('PlaybackOrder', $(this).prop('selectedIndex'));
 		});
 
 		// search dialog
@@ -1613,7 +1618,7 @@ $(function(){
 
 		// Playlist buttons
 		$('#prevpage_btn').click(function(e){
-			if (!$(this).hasClass('ui-state-disabled')) {
+			if (!$(this).hasClass('ui-state-disabled') && fb) {
 				e.preventDefault();
 				retrievestate('P', fb.playlistPage - 1);
 			}
@@ -1645,7 +1650,7 @@ $(function(){
 		})
 		.click(	function(event) {
 				if (fb && fb.isPlaying == "1")
-					command('Seek', (Math.round((mouse.x-$('#progressbar').offset().left)*100 / $('#progressbar').width())));
+					command('SeekSecond', (Math.round((mouse.x-$('#progressbar').offset().left)*fb.itemPlayingLen / $('#progressbar').width())));
 			});
 
 		$(window).bind("blur", function() {
