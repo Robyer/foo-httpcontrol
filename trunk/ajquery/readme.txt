@@ -1,5 +1,5 @@
 Asynchronious foo_httpcontrol template
-0.69 http://code.google.com/p/foo-httpcontrol/
+0.71 http://code.google.com/p/foo-httpcontrol/
 
 *** Requirements
 
@@ -9,7 +9,7 @@ Asynchronious foo_httpcontrol template
 
 	Some other browsers might also work, but you never know until you try.
 
-	foobar2000 1.0 and foo_httpcontrol 0.96.10 or more recent versions
+	foobar2000 1.0 and foo_httpcontrol 0.97.15 or more recent versions
 	are required.
 
 *** Installation
@@ -50,10 +50,14 @@ Asynchronious foo_httpcontrol template
 
 *** Release history 2014
 
+	02 Mar  0.71
+		add:	Second precision seeking (instead of percent), requires 
+			foo_httpcontrol 0.97.15;
+		fix:	updated to latest jQuery;
+
 	02 Mar  0.70
 		fix:	Wrong handling of parent button in file browser;
 		fix:	Playback order drop down-box didn't reflect the actual order;
-
 
 *** Release history 2012
 
