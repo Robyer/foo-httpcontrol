@@ -200,7 +200,7 @@ namespace control
 		return true;
 	}
 
-	bool cmd_seek(foo_httpserver_command *cmd)
+	bool cmd_seekpercent(foo_httpserver_command *cmd)
 	{
 		static_api_ptr_t<play_control> pc;
 
@@ -227,6 +227,23 @@ namespace control
 
 			pc->playback_seek_delta(atoi(param1)*1.0);
 
+			return true;
+		}
+		else
+			return false;
+	}
+
+	bool cmd_seeksecond(foo_httpserver_command *cmd)
+	{
+		static_api_ptr_t<play_control> pc;
+
+		if (pc->playback_can_seek())
+		{
+			pfc::string8 param1 = cmd->get_param(0);
+
+			double new_pos = atoi(param1);
+			httpc::pb_time = new_pos;
+			pc->playback_seek(new_pos);
 			return true;
 		}
 		else
@@ -1081,8 +1098,9 @@ namespace control
 		commands["PlayOrPause"] = &cmd_playorpause;
 		commands["StartPrevious"] = &cmd_startprevious;
 		commands["StartNext"] = &cmd_startnext;
-		commands["Seek"] = &cmd_seek;
+		commands["SeekPercent"] = &cmd_seekpercent;
 		commands["SeekDelta"] = &cmd_seekdelta;
+		commands["SeekSecond"] = &cmd_seeksecond;
 		commands["Browse"] = &cmd_browse;
 		commands["Search"] = &cmd_searchmedialibrary;
 		commands["SearchMediaLibrary"] = &cmd_searchmedialibrary;
@@ -1123,8 +1141,10 @@ namespace control
 		commands["SetSelection"] = &cmd_setselection;
 		commands["SortAscending"] = &cmd_sort_ascending;
 		commands["SortDescending"] = &cmd_sort_descending;
-		commands["Sort"] = &cmd_sort_ascending; // deprecated
 		commands["FormatTitles"] = &cmd_formattitles;
+		commands["SeekSecondDelta"] = &cmd_seekdelta;	// deprecated
+		commands["Sort"] = &cmd_sort_ascending;			// deprecated
+		commands["Seek"] = &cmd_seekpercent;			// deprecated
 	}
 
 }
