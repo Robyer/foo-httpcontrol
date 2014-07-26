@@ -1375,6 +1375,7 @@ $(function(){
 			},
 			open: function(event, ui) {
 				save_window_to_cookie($(this).attr('id'), true);
+				$('#searchstr').focus();
 			},
 			resizable : 'n,e,s,w,nw,sw,ne',
 		    	dragStop: function(event, ui) {
@@ -1391,7 +1392,7 @@ $(function(){
 
 		$('#searchstr').keypress(function(e) {
 			if (e.which == 13)
-				searchmedialibrary($('#searchstr').attr('value'));
+				searchmedialibrary($('#searchstr').val());
 			else
 			{
 				if (timeoutid2)
@@ -1401,7 +1402,7 @@ $(function(){
 				}
 
 				if (!timeoutid2)
-				    timeoutid2 = setTimeout("searchmedialibrary($('#searchstr').attr('value'))", 500);
+				    timeoutid2 = setTimeout("searchmedialibrary($('#searchstr').val())", 500);
 			}
 		});
 
