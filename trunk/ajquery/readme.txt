@@ -1,5 +1,5 @@
 Asynchronious foo_httpcontrol template
-0.71 http://code.google.com/p/foo-httpcontrol/
+0.72 http://code.google.com/p/foo-httpcontrol/
 
 *** Requirements
 
@@ -49,6 +49,10 @@ Asynchronious foo_httpcontrol template
 	want to permanently modify playlist page size.
 
 *** Release history 2014
+
+	26 Jul  0.72
+		fix:	broken media library search;
+		add:	autofocus input on search window open;
 
 	02 Mar  0.71
 		add:	Second precision seeking (instead of percent), requires 
